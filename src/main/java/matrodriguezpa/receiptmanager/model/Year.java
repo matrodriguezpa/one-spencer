@@ -16,10 +16,10 @@ public class Year {
 
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Project projectId;
+    private Long projectId;
 
-    private String name;
     private int YEAR;
+    private String tag;
 
     private final List<Month> months = new ArrayList<>();
 
@@ -27,8 +27,8 @@ public class Year {
     public String toString() {
         return "Project{"
                 + "id=" + (this.getId() != null ? this.getId() : "null")
-                + ", name='" + (this.getName() != null ? this.getName() : "") + '\''
                 + ", Year='" + this.getYEAR() + '\''
+                + ", tag='" + (this.getTag() != null ? this.getTag() : "") + '\''
                 + '}';
     }
 

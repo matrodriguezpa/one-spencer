@@ -1,6 +1,6 @@
 package matrodriguezpa.receiptmanager.model;
 
-import matrodriguezpa.receiptmanager.dao.DBConectionUtil;
+import matrodriguezpa.receiptmanager.Util.DBConectionUtil;
 import lombok.*;
 
 @Getter
@@ -8,9 +8,12 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Expense extends DBConectionUtil {
+public class Expense {
 
     private Long id;
+
+    private Long ProjectId;
+    private Long yearId;
     private Long MonthId;
 
     private int YEAR;
@@ -26,9 +29,14 @@ public class Expense extends DBConectionUtil {
     @Override
     public String toString() {
         Long id = this.getId();
+        Long projectId = this.getProjectId();
+        Long yearIdField = this.getYearId();
+        Long monthIdField = this.getMonthId();
+
         Integer year = this.getYEAR();
         Integer month = this.getMONTH();
         Integer day = this.getDAY();
+
         String company = this.getCompany() != null ? this.getCompany() : "";
         double amount = this.getAmount();
         String type = this.getType() != null ? this.getType() : "";
@@ -39,6 +47,10 @@ public class Expense extends DBConectionUtil {
 
         return "Expense{"
                 + "id=" + (id != null ? id : "null")
+                + ", projectId=" + (projectId != null ? projectId : "null")
+                + ", yearId=" + (yearIdField != null ? yearIdField : "null")
+                + ", monthId=" + (monthIdField != null ? monthIdField : "null")
+                + ", date='" + date + '\''
                 + ", company='" + company + '\''
                 + ", amount=" + String.format("%.2f", amount)
                 + ", type='" + type + '\''
