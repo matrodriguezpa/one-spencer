@@ -7,7 +7,6 @@ public class YearView extends javax.swing.JPanel {
 
     public YearView() {
         initComponents();
-        getNewProjectButton();
     }
 
     @SuppressWarnings("unchecked")
@@ -20,6 +19,10 @@ public class YearView extends javax.swing.JPanel {
         addWorkbookLabel2 = new javax.swing.JLabel();
         newProjectYear = new javax.swing.JTextField();
         warning = new javax.swing.JLabel();
+        YearFormPanel = new javax.swing.JPanel();
+        insertName = new javax.swing.JLabel();
+        DateSpinner = new javax.swing.JSpinner();
+        TagTextField = new javax.swing.JTextField();
         leftSibeBar = new javax.swing.JToolBar();
         jToolBar1 = new javax.swing.JToolBar();
         newProjectButton = new javax.swing.JButton();
@@ -45,6 +48,15 @@ public class YearView extends javax.swing.JPanel {
 
         warning.setForeground(java.awt.Color.red);
         NewProject.add(warning);
+
+        YearFormPanel.setLayout(new javax.swing.BoxLayout(YearFormPanel, javax.swing.BoxLayout.Y_AXIS));
+
+        insertName.setText("Insert Name");
+        YearFormPanel.add(insertName);
+        YearFormPanel.add(DateSpinner);
+
+        TagTextField.setText("Nuevo usuario");
+        YearFormPanel.add(TagTextField);
 
         setLayout(new java.awt.BorderLayout());
 
@@ -87,9 +99,13 @@ public class YearView extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JSpinner DateSpinner;
     private javax.swing.JPanel NewProject;
+    private javax.swing.JTextField TagTextField;
+    private javax.swing.JPanel YearFormPanel;
     private javax.swing.JLabel addWorkbookLabel1;
     private javax.swing.JLabel addWorkbookLabel2;
+    private javax.swing.JLabel insertName;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JTree leftNavigation;
     private javax.swing.JScrollPane leftScroll;

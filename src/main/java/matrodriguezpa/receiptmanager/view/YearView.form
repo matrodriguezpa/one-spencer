@@ -34,6 +34,26 @@
         </Component>
       </SubComponents>
     </Container>
+    <Container class="javax.swing.JPanel" name="YearFormPanel">
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout">
+        <Property name="axis" type="int" value="1"/>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="insertName">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Insert Name"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JSpinner" name="DateSpinner">
+        </Component>
+        <Component class="javax.swing.JTextField" name="TagTextField">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Nuevo usuario"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
   </NonVisualComponents>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>

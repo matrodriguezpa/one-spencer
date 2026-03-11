@@ -9,6 +9,7 @@ public class ProjectView extends javax.swing.JPanel {
     public ProjectView() {
         initComponents();
     }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -19,6 +20,7 @@ public class ProjectView extends javax.swing.JPanel {
         newUserTextField = new javax.swing.JTextField();
         main = new javax.swing.JPanel();
         welcomeImage = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
         userSelectionPanel = new javax.swing.JPanel();
         userSelectionText = new javax.swing.JLabel();
         jSplitPane1 = new javax.swing.JSplitPane();
@@ -35,11 +37,6 @@ public class ProjectView extends javax.swing.JPanel {
         userFormPanel.add(insertName);
 
         newUserTextField.setText("Nuevo usuario");
-        newUserTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newUserTextFieldActionPerformed(evt);
-            }
-        });
         userFormPanel.add(newUserTextField);
 
         setLayout(new java.awt.BorderLayout());
@@ -56,6 +53,7 @@ public class ProjectView extends javax.swing.JPanel {
         welcomeImage.setPreferredSize(new java.awt.Dimension(70, 70));
         main.add(welcomeImage, java.awt.BorderLayout.PAGE_START);
 
+        userSelectionPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
         userSelectionPanel.setAlignmentX(0.0F);
         userSelectionPanel.setAlignmentY(0.0F);
         userSelectionPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -73,7 +71,9 @@ public class ProjectView extends javax.swing.JPanel {
         userSelectionText.setMaximumSize(new java.awt.Dimension(500, 16));
         userSelectionPanel.add(userSelectionText);
 
-        main.add(userSelectionPanel, java.awt.BorderLayout.CENTER);
+        jScrollPane1.setViewportView(userSelectionPanel);
+
+        main.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         jPanel1.setMaximumSize(new java.awt.Dimension(70, 40));
         jPanel1.setMinimumSize(new java.awt.Dimension(70, 40));
@@ -140,15 +140,12 @@ public class ProjectView extends javax.swing.JPanel {
         add(main, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void newUserTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newUserTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_newUserTextFieldActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton createNewUser;
     private javax.swing.JLabel insertName;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JPanel main;
     private javax.swing.JTextField newUserTextField;
