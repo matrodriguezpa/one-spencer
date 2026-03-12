@@ -1,11 +1,13 @@
 package matrodriguezpa.receiptmanager.dao;
 
+import matrodriguezpa.receiptmanager.Util.DBConectionUtil;
 import java.util.List;
 import java.util.ArrayList;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import matrodriguezpa.receiptmanager.model.Project;
 
 import matrodriguezpa.receiptmanager.model.Year;
 
@@ -17,9 +19,9 @@ public class YearDAO extends DBConectionUtil {
 
     // Crear tabla projects si no existe
     public boolean createTable() {
-        String sql = "CREATE TABLE IF NOT EXISTS projects ("
+        String sql = "CREATE TABLE IF NOT EXISTS years ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "name TEXT NOT NULL UNIQUE"
+                + "tag TEXT NOT NULL UNIQUE"
                 + ")";
 
         try {
@@ -30,7 +32,7 @@ public class YearDAO extends DBConectionUtil {
             closeConnection();
             return true;
         } catch (SQLException e) {
-            System.err.println("Error creating projects table: " + e.getMessage());
+            System.err.println("Error creating years table: " + e.getMessage());
             try {
                 closeConnection();
             } catch (SQLException closeEx) {
@@ -41,18 +43,18 @@ public class YearDAO extends DBConectionUtil {
     }
 
     // Crear un nuevo proyecto y retornar el ID generado
-    public Long createYear(Year project) {
-        if (project == null || project.getName() == null || project.getName().trim().isEmpty()) {
+    public Long createYear(Year year) {
+        if (year == null || year.getTag() == null || year.getTag().trim().isEmpty()) {
             return null;
         }
 
-        String sql = "INSERT INTO projects (name) VALUES (?)";
+        String sql = "INSERT INTO years (tag) VALUES (?)";
 
         try {
             connect();
 
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                stmt.setString(1, project.getName().trim());
+                stmt.setString(1, year.getTag().trim());
                 int affected = stmt.executeUpdate();
 
                 if (affected == 0) {
@@ -68,7 +70,7 @@ public class YearDAO extends DBConectionUtil {
             return generatedId;
 
         } catch (SQLException e) {
-            System.err.println("Error creating project: " + e.getMessage());
+            System.err.println("Error creating year: " + e.getMessage());
             try {
                 closeConnection();
             } catch (SQLException ex) {
@@ -79,24 +81,24 @@ public class YearDAO extends DBConectionUtil {
     }
 
     // Insertar nuevo proyecto y actualizar su id si se genera (mantener compatibilidad)
-    public Year save(Year project) {
-        if (project == null) {
+    public Year save(Year year) {
+        if (year == null) {
             return null;
         }
 
-        Long generatedId = createYear(project);
+        Long generatedId = createYear(year);
         if (generatedId != null) {
-            project.setId(generatedId);
-            return project;
+            year.setId(generatedId);
+            return year;
         }
         return null;
     }
 
     // Obtener todos los proyectos
     public List<Year> findAll() {
-        String sql = "SELECT id, name FROM projects ORDER BY name";
+        String sql = "SELECT id, tag FROM years ORDER BY tag";
 
-        List<Year> projects = new ArrayList<>();
+        List<Year> years = new ArrayList<>();
 
         try {
             connect();
@@ -106,9 +108,9 @@ public class YearDAO extends DBConectionUtil {
             while (rs.next()) {
                 Year p = Year.builder()
                         .id(rs.getLong("id"))
-                        .name(rs.getString("name"))
+                        .tag(rs.getString("tag"))
                         .build();
-                projects.add(p);
+                years.add(p);
             }
 
             rs.close();
@@ -116,7 +118,7 @@ public class YearDAO extends DBConectionUtil {
             closeConnection();
 
         } catch (SQLException e) {
-            System.err.println("Error finding projects: " + e.getMessage());
+            System.err.println("Error finding years: " + e.getMessage());
             try {
                 closeConnection();
             } catch (SQLException closeEx) {
@@ -124,7 +126,7 @@ public class YearDAO extends DBConectionUtil {
             }
         }
 
-        return projects;
+        return years;
     }
 
     // Buscar proyecto por id
@@ -133,7 +135,7 @@ public class YearDAO extends DBConectionUtil {
             return null;
         }
 
-        String sql = "SELECT id, name FROM projects WHERE id = ?";
+        String sql = "SELECT id, tag FROM years WHERE id = ?";
 
         try {
             connect();
@@ -141,12 +143,12 @@ public class YearDAO extends DBConectionUtil {
             statement.setLong(1, id);
 
             ResultSet rs = statement.executeQuery();
-            Year project = null;
+            Year year = null;
 
             if (rs.next()) {
-                project = Year.builder()
+                year = Year.builder()
                         .id(rs.getLong("id"))
-                        .name(rs.getString("name"))
+                        .tag(rs.getString("tag"))
                         .build();
             }
 
@@ -154,10 +156,10 @@ public class YearDAO extends DBConectionUtil {
             statement.close();
             closeConnection();
 
-            return project;
+            return year;
 
         } catch (SQLException e) {
-            System.err.println("Error finding project by id: " + e.getMessage());
+            System.err.println("Error finding years by id: " + e.getMessage());
             try {
                 closeConnection();
             } catch (SQLException closeEx) {
@@ -168,19 +170,19 @@ public class YearDAO extends DBConectionUtil {
     }
 
     // Actualizar proyecto
-    public boolean updateYear(Year project) {
-        if (project == null || project.getId() == null
-                || project.getName() == null || project.getName().trim().isEmpty()) {
+    public boolean updateYear(Year year) {
+        if (year == null || year.getId() == null
+                || year.getTag() == null || year.getTag().trim().isEmpty()) {
             return false;
         }
 
-        String sql = "UPDATE projects SET name = ? WHERE id = ?";
+        String sql = "UPDATE years SET tag = ? WHERE id = ?";
 
         try {
             connect();
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, project.getName().trim());
-            statement.setLong(2, project.getId());
+            statement.setString(1, year.getTag().trim());
+            statement.setLong(2, year.getId());
 
             int affectedRows = statement.executeUpdate();
             statement.close();
@@ -189,7 +191,7 @@ public class YearDAO extends DBConectionUtil {
             return affectedRows > 0;
 
         } catch (SQLException e) {
-            System.err.println("Error updating project: " + e.getMessage());
+            System.err.println("Error updating year: " + e.getMessage());
             try {
                 closeConnection();
             } catch (SQLException closeEx) {
@@ -205,7 +207,7 @@ public class YearDAO extends DBConectionUtil {
             return false;
         }
 
-        String sql = "DELETE FROM projects WHERE id = ?";
+        String sql = "DELETE FROM years WHERE id = ?";
 
         try {
             connect();
@@ -219,7 +221,7 @@ public class YearDAO extends DBConectionUtil {
             return affectedRows > 0;
 
         } catch (SQLException e) {
-            System.err.println("Error deleting project: " + e.getMessage());
+            System.err.println("Error deleting year: " + e.getMessage());
             try {
                 closeConnection();
             } catch (SQLException closeEx) {
@@ -235,7 +237,7 @@ public class YearDAO extends DBConectionUtil {
             return false;
         }
 
-        String sql = "SELECT COUNT(*) FROM projects WHERE id = ?";
+        String sql = "SELECT COUNT(*) FROM years WHERE id = ?";
 
         try {
             connect();
@@ -256,7 +258,7 @@ public class YearDAO extends DBConectionUtil {
             return exists;
 
         } catch (SQLException e) {
-            System.err.println("Error checking if project exists by id: " + e.getMessage());
+            System.err.println("Error checking if year exists by id: " + e.getMessage());
             try {
                 closeConnection();
             } catch (SQLException closeEx) {
@@ -267,8 +269,8 @@ public class YearDAO extends DBConectionUtil {
     }
 
     // Obtener el total de proyectos
-    public int getProjectCount() {
-        String sql = "SELECT COUNT(*) FROM projects";
+    public int getYearCount() {
+        String sql = "SELECT COUNT(*) FROM years";
 
         try {
             connect();
@@ -287,7 +289,7 @@ public class YearDAO extends DBConectionUtil {
             return count;
 
         } catch (SQLException e) {
-            System.err.println("Error getting project count: " + e.getMessage());
+            System.err.println("Error getting year count: " + e.getMessage());
             try {
                 closeConnection();
             } catch (SQLException closeEx) {
@@ -299,15 +301,15 @@ public class YearDAO extends DBConectionUtil {
 
     // Obtener proyectos con información de gastos
     public List<Year> findAllWithExpenseInfo() {
-        String sql = "SELECT p.id, p.name, "
+        String sql = "SELECT p.id, p.tag, "
                 + "COUNT(e.id) as expense_count, "
                 + "COALESCE(SUM(e.amount), 0) as total_amount "
-                + "FROM projects p "
-                + "LEFT JOIN expenses e ON p.id = e.project_id "
-                + "GROUP BY p.id, p.name "
-                + "ORDER BY p.name";
+                + "FROM years p "
+                + "LEFT JOIN expenses e ON p.id = e.year_id "
+                + "GROUP BY p.id, p.tag "
+                + "ORDER BY p.tag";
 
-        List<Year> projects = new ArrayList<>();
+        List<Year> years = new ArrayList<>();
 
         try {
             connect();
@@ -317,13 +319,13 @@ public class YearDAO extends DBConectionUtil {
             while (rs.next()) {
                 Year p = Year.builder()
                         .id(rs.getLong("id"))
-                        .name(rs.getString("name"))
+                        .tag(rs.getString("tag"))
                         .build();
 
                 // Nota: Si tu modelo Project tiene campos para expense_count y total_amount,
                 // puedes agregarlos aquí. De lo contrario, esta información se puede obtener
                 // por separado cuando se necesite.
-                projects.add(p);
+                years.add(p);
             }
 
             rs.close();
@@ -331,7 +333,7 @@ public class YearDAO extends DBConectionUtil {
             closeConnection();
 
         } catch (SQLException e) {
-            System.err.println("Error finding projects with expense info: " + e.getMessage());
+            System.err.println("Error finding years with expense info: " + e.getMessage());
             try {
                 closeConnection();
             } catch (SQLException closeEx) {
@@ -339,7 +341,7 @@ public class YearDAO extends DBConectionUtil {
             }
         }
 
-        return projects;
+        return years;
     }
 
     public static void isEmpty(String yearText) {
@@ -359,5 +361,13 @@ public class YearDAO extends DBConectionUtil {
             throw new IllegalArgumentException("Year must be between 0 and 9999");
         }
         return y;
+    }
+
+    public boolean existsByProjectAndYear(Long projectId, int year) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public boolean existsByProjectAndYear(Project project, int yearValue) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

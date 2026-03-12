@@ -1,5 +1,6 @@
 package matrodriguezpa.receiptmanager.dao;
 
+import matrodriguezpa.receiptmanager.Util.DBConectionUtil;
 import java.util.List;
 import java.util.ArrayList;
 import java.sql.PreparedStatement;
@@ -15,11 +16,13 @@ public class ExpenseDAO extends DBConectionUtil {
         getDataBaseUrl();
     }
 
-    // Crear tabla expenses si no existe
+    // Crear tabla expenses si no existe (nota: si ya existe la tabla no se alterará automáticamente)
     public boolean createTable() {
         String sql = "CREATE TABLE IF NOT EXISTS expenses ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + "project_id INTEGER, "
+                + "year_id INTEGER, "
+                + "month_id INTEGER, "
                 + "year INTEGER NOT NULL, "
                 + "month INTEGER NOT NULL, "
                 + "day INTEGER NOT NULL, "
@@ -55,24 +58,56 @@ public class ExpenseDAO extends DBConectionUtil {
             return null;
         }
 
-        String sql = "INSERT INTO expenses (project_id, year, month, day, company, amount, type, matrix, payment) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        // ahora insertamos project_id, year_id, month_id además de year/month/day y demás campos
+        String sql = "INSERT INTO expenses (project_id, year_id, month_id, year, month, day, company, amount, type, matrix, payment) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             connect();
 
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                if (expense.getMonthId() != null) {
-                    stmt.setLong(1, expense.getMonthId());
+                // 1 project_id
+                if (expense.getProjectId() != null) {
+                    stmt.setLong(1, expense.getProjectId());
                 } else {
                     stmt.setNull(1, java.sql.Types.BIGINT);
                 }
-                stmt.setInt(2, expense.getYEAR());
-                stmt.setInt(3, expense.getMONTH());
-                stmt.setInt(4, expense.getDAY());
+
+                // 2 year_id
+                if (expense.getYearId() != null) {
+                    stmt.setLong(2, expense.getYearId());
+                } else {
+                    stmt.setNull(2, java.sql.Types.BIGINT);
+                }
+
+                // 3 month_id
+                if (expense.getMonthId() != null) {
+                    stmt.setLong(3, expense.getMonthId());
+                } else {
+                    stmt.setNull(3, java.sql.Types.BIGINT);
+                }
+
+                // 4 year (int)
+                stmt.setInt(4, expense.getYEAR());
+
+                // 5 month (int)
+                stmt.setInt(5, expense.getMONTH());
+
+                // 6 day (int)
+                stmt.setInt(6, expense.getDAY());
+
+                // 7 company
                 stmt.setString(7, expense.getCompany());
+
+                // 8 amount
                 stmt.setDouble(8, expense.getAmount());
+
+                // 9 type
                 stmt.setString(9, expense.getType());
+
+                // 10 matrix
                 stmt.setString(10, expense.getMatrix());
+
+                // 11 payment
                 stmt.setString(11, expense.getPayment());
 
                 int affected = stmt.executeUpdate();
@@ -116,7 +151,7 @@ public class ExpenseDAO extends DBConectionUtil {
 
     // Obtener todos los gastos
     public List<Expense> findAll() {
-        String sql = "SELECT id, project_id, year, month, day, company, amount, type, matrix, payment FROM expenses ORDER BY id";
+        String sql = "SELECT id, project_id, year_id, month_id, year, month, day, company, amount, type, matrix, payment FROM expenses ORDER BY id";
 
         List<Expense> expenses = new ArrayList<>();
 
@@ -126,9 +161,21 @@ public class ExpenseDAO extends DBConectionUtil {
             ResultSet rs = statement.executeQuery(sql);
 
             while (rs.next()) {
+                // obtener Longs de forma segura (nullable)
+                Number pNum = (Number) rs.getObject("project_id");
+                Long projectId = pNum != null ? pNum.longValue() : null;
+
+                Number yIdNum = (Number) rs.getObject("year_id");
+                Long yearId = yIdNum != null ? yIdNum.longValue() : null;
+
+                Number mIdNum = (Number) rs.getObject("month_id");
+                Long monthId = mIdNum != null ? mIdNum.longValue() : null;
+
                 Expense exp = Expense.builder()
                         .id(rs.getLong("id"))
-                        .MonthId(rs.getLong("month_id"))
+                        .ProjectId(projectId)
+                        .yearId(yearId)
+                        .MonthId(monthId)
                         .YEAR(rs.getInt("year"))
                         .MONTH(rs.getInt("month"))
                         .DAY(rs.getInt("day"))
@@ -163,7 +210,7 @@ public class ExpenseDAO extends DBConectionUtil {
             return null;
         }
 
-        String sql = "SELECT id, project_id, year, month, day, company, amount, type, matrix, payment FROM expenses WHERE id = ?";
+        String sql = "SELECT id, project_id, year_id, month_id, year, month, day, company, amount, type, matrix, payment FROM expenses WHERE id = ?";
 
         try {
             connect();
@@ -174,9 +221,20 @@ public class ExpenseDAO extends DBConectionUtil {
             Expense expense = null;
 
             if (rs.next()) {
+                Number pNum = (Number) rs.getObject("project_id");
+                Long projectId = pNum != null ? pNum.longValue() : null;
+
+                Number yIdNum = (Number) rs.getObject("year_id");
+                Long yearId = yIdNum != null ? yIdNum.longValue() : null;
+
+                Number mIdNum = (Number) rs.getObject("month_id");
+                Long monthId = mIdNum != null ? mIdNum.longValue() : null;
+
                 expense = Expense.builder()
                         .id(rs.getLong("id"))
-                        .MonthId(rs.getLong("month_id"))
+                        .ProjectId(projectId)
+                        .yearId(yearId)
+                        .MonthId(monthId)
                         .YEAR(rs.getInt("year"))
                         .MONTH(rs.getInt("month"))
                         .DAY(rs.getInt("day"))
@@ -213,7 +271,7 @@ public class ExpenseDAO extends DBConectionUtil {
             return expenses;
         }
 
-        String sql = "SELECT id, project_id, year, month, day, company, amount, type, matrix, payment FROM expenses WHERE project_id = ? ORDER BY year, month, day";
+        String sql = "SELECT id, project_id, year_id, month_id, year, month, day, company, amount, type, matrix, payment FROM expenses WHERE project_id = ? ORDER BY year, month, day";
 
         try {
             connect();
@@ -223,9 +281,20 @@ public class ExpenseDAO extends DBConectionUtil {
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
+                Number pNum = (Number) rs.getObject("project_id");
+                Long pId = pNum != null ? pNum.longValue() : null;
+
+                Number yIdNum = (Number) rs.getObject("year_id");
+                Long yearId = yIdNum != null ? yIdNum.longValue() : null;
+
+                Number mIdNum = (Number) rs.getObject("month_id");
+                Long monthId = mIdNum != null ? mIdNum.longValue() : null;
+
                 Expense exp = Expense.builder()
                         .id(rs.getLong("id"))
-                        .MonthId(rs.getLong("month_id"))
+                        .ProjectId(pId)
+                        .yearId(yearId)
+                        .MonthId(monthId)
                         .YEAR(rs.getInt("year"))
                         .MONTH(rs.getInt("month"))
                         .DAY(rs.getInt("day"))
@@ -262,7 +331,7 @@ public class ExpenseDAO extends DBConectionUtil {
             return expenses;
         }
 
-        String sql = "SELECT id, project_id, year, month, day, company, amount, type, matrix, payment FROM expenses WHERE company LIKE ? ORDER BY year, month, day";
+        String sql = "SELECT id, project_id, year_id, month_id, year, month, day, company, amount, type, matrix, payment FROM expenses WHERE company LIKE ? ORDER BY year, month, day";
 
         try {
             connect();
@@ -272,9 +341,20 @@ public class ExpenseDAO extends DBConectionUtil {
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
+                Number pNum = (Number) rs.getObject("project_id");
+                Long projectId = pNum != null ? pNum.longValue() : null;
+
+                Number yIdNum = (Number) rs.getObject("year_id");
+                Long yearId = yIdNum != null ? yIdNum.longValue() : null;
+
+                Number mIdNum = (Number) rs.getObject("month_id");
+                Long monthId = mIdNum != null ? mIdNum.longValue() : null;
+
                 Expense exp = Expense.builder()
                         .id(rs.getLong("id"))
-                        .MonthId(rs.getLong("month_id"))
+                        .ProjectId(projectId)
+                        .yearId(yearId)
+                        .MonthId(monthId)
                         .YEAR(rs.getInt("year"))
                         .MONTH(rs.getInt("month"))
                         .DAY(rs.getInt("day"))
@@ -309,25 +389,58 @@ public class ExpenseDAO extends DBConectionUtil {
             return false;
         }
 
-        String sql = "UPDATE expenses SET project_id = ?, year = ?, month = ?, day = ?, company = ?, amount = ?, type = ?, matrix = ?, payment = ? WHERE id = ?";
+        String sql = "UPDATE expenses SET project_id = ?, year_id = ?, month_id = ?, year = ?, month = ?, day = ?, company = ?, amount = ?, type = ?, matrix = ?, payment = ? WHERE id = ?";
 
         try {
             connect();
             PreparedStatement statement = connection.prepareStatement(sql);
 
-            if (expense.getMonthId() != null) {
-                statement.setLong(1, expense.getMonthId());
+            // 1 project_id
+            if (expense.getProjectId() != null) {
+                statement.setLong(1, expense.getProjectId());
             } else {
                 statement.setNull(1, java.sql.Types.BIGINT);
             }
-            statement.setInt(2, expense.getYEAR());
-            statement.setInt(3, expense.getMONTH());
-            statement.setInt(4, expense.getDAY());
+
+            // 2 year_id
+            if (expense.getYearId() != null) {
+                statement.setLong(2, expense.getYearId());
+            } else {
+                statement.setNull(2, java.sql.Types.BIGINT);
+            }
+
+            // 3 month_id
+            if (expense.getMonthId() != null) {
+                statement.setLong(3, expense.getMonthId());
+            } else {
+                statement.setNull(3, java.sql.Types.BIGINT);
+            }
+
+            // 4 year
+            statement.setInt(4, expense.getYEAR());
+
+            // 5 month
+            statement.setInt(5, expense.getMONTH());
+
+            // 6 day
+            statement.setInt(6, expense.getDAY());
+
+            // 7 company
             statement.setString(7, expense.getCompany());
+
+            // 8 amount
             statement.setDouble(8, expense.getAmount());
+
+            // 9 type
             statement.setString(9, expense.getType());
+
+            // 10 matrix
             statement.setString(10, expense.getMatrix());
+
+            // 11 payment
             statement.setString(11, expense.getPayment());
+
+            // 12 id (where)
             statement.setLong(12, expense.getId());
 
             int affectedRows = statement.executeUpdate();

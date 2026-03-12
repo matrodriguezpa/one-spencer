@@ -1,5 +1,6 @@
 package matrodriguezpa.receiptmanager.dao;
 
+import matrodriguezpa.receiptmanager.Util.DBConectionUtil;
 import java.util.List;
 import java.util.ArrayList;
 import java.sql.PreparedStatement;
@@ -16,9 +17,9 @@ public class ProjectDAO extends DBConectionUtil {
         getDataBaseUrl();
     }
 
-    // Crear tabla users si no existe
+    // Create projects table if it does not exist
     public boolean createTable() {
-        String sql = "CREATE TABLE IF NOT EXISTS users ("
+        String sql = "CREATE TABLE IF NOT EXISTS projects ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + "name TEXT NOT NULL"
                 + ")";
@@ -41,19 +42,19 @@ public class ProjectDAO extends DBConectionUtil {
         }
     }
 
-    // Crear un nuevo usuario
-    public Long createProject(Project user) {
-        if (user == null) {
+    // Create new project
+    public Long createProject(Project project) {
+        if (project == null) {
             return null;
         }
 
-        String sql = "INSERT INTO users (name) VALUES (?)";
+        String sql = "INSERT INTO projects (name) VALUES (?)";
 
         try {
             connect(); // abre la conexión y deja 'connection' activa
 
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                stmt.setString(1, user.getName());
+                stmt.setString(1, project.getName());
                 int affected = stmt.executeUpdate();
 
                 if (affected == 0) {
@@ -71,7 +72,7 @@ public class ProjectDAO extends DBConectionUtil {
             return generatedId;
 
         } catch (SQLException e) {
-            System.err.println("Error creating user: " + e.getMessage());
+            System.err.println("Error creating project: " + e.getMessage());
             try {
                 closeConnection();
             } catch (SQLException ex) {
@@ -81,18 +82,18 @@ public class ProjectDAO extends DBConectionUtil {
     }
 
     // Actualizar usuario existente
-    public boolean updateProject(Project user) {
-        if (user == null || user.getId() == null || user.getName() == null || user.getName().trim().isEmpty()) {
+    public boolean updateProject(Project project) {
+        if (project == null || project.getId() == null || project.getName() == null || project.getName().trim().isEmpty()) {
             return false;
         }
 
-        String sql = "UPDATE users SET name = ? WHERE id = ?";
+        String sql = "UPDATE projects SET name = ? WHERE id = ?";
 
         try {
             connect();
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, user.getName().trim());
-            statement.setLong(2, user.getId());
+            statement.setString(1, project.getName().trim());
+            statement.setLong(2, project.getId());
 
             int affectedRows = statement.executeUpdate();
             statement.close();
@@ -101,7 +102,7 @@ public class ProjectDAO extends DBConectionUtil {
             return affectedRows > 0;
 
         } catch (SQLException e) {
-            System.err.println("Error updating user: " + e.getMessage());
+            System.err.println("Error updating project: " + e.getMessage());
             try {
                 closeConnection();
             } catch (SQLException closeEx) {
@@ -117,7 +118,7 @@ public class ProjectDAO extends DBConectionUtil {
             return null;
         }
 
-        String sql = "SELECT id, name FROM users WHERE id = ?";
+        String sql = "SELECT id, name FROM projects WHERE id = ?";
 
         try {
             connect();
@@ -125,10 +126,10 @@ public class ProjectDAO extends DBConectionUtil {
             statement.setLong(1, id);
 
             ResultSet result = statement.executeQuery();
-            Project user = null;
+            Project project = null;
 
             if (result.next()) {
-                user = Project.builder()
+                project = Project.builder()
                         .id(result.getLong("id"))
                         .name(result.getString("name"))
                         .build();
@@ -138,10 +139,10 @@ public class ProjectDAO extends DBConectionUtil {
             statement.close();
             closeConnection();
 
-            return user;
+            return project;
 
         } catch (SQLException e) {
-            System.err.println("Error finding user by id: " + e.getMessage());
+            System.err.println("Error finding projects by id: " + e.getMessage());
             try {
                 closeConnection();
             } catch (SQLException closeEx) {
@@ -153,13 +154,13 @@ public class ProjectDAO extends DBConectionUtil {
 
     // Buscar usuarios por nombre (búsqueda parcial)
     public List<Project> findByName(String name) {
-        List<Project> users = new ArrayList<>();
+        List<Project> projects = new ArrayList<>();
 
         if (name == null || name.trim().isEmpty()) {
-            return users;
+            return projects;
         }
 
-        String sql = "SELECT id, name FROM users WHERE name LIKE ?";
+        String sql = "SELECT id, name FROM projects WHERE name LIKE ?";
 
         try {
             connect();
@@ -169,11 +170,11 @@ public class ProjectDAO extends DBConectionUtil {
             ResultSet result = statement.executeQuery();
 
             while (result.next()) {
-                Project user = Project.builder()
+                Project project = Project.builder()
                         .id(result.getLong("id"))
                         .name(result.getString("name"))
                         .build();
-                users.add(user);
+                projects.add(project);
             }
 
             result.close();
@@ -181,7 +182,7 @@ public class ProjectDAO extends DBConectionUtil {
             closeConnection();
 
         } catch (SQLException e) {
-            System.err.println("Error finding users by name: " + e.getMessage());
+            System.err.println("Error finding projects by name: " + e.getMessage());
             try {
                 closeConnection();
             } catch (SQLException closeEx) {
@@ -189,13 +190,13 @@ public class ProjectDAO extends DBConectionUtil {
             }
         }
 
-        return users;
+        return projects;
     }
 
     // Obtener todos los usuarios
     public List<Project> findAll() {
-        List<Project> users = new ArrayList<>();
-        String sql = "SELECT id, name FROM users ORDER BY name";
+        List<Project> projects = new ArrayList<>();
+        String sql = "SELECT id, name FROM projects ORDER BY name";
 
         try {
             connect();
@@ -203,11 +204,11 @@ public class ProjectDAO extends DBConectionUtil {
             ResultSet result = statement.executeQuery(sql);
 
             while (result.next()) {
-                Project user = Project.builder()
+                Project project = Project.builder()
                         .id(result.getLong("id"))
                         .name(result.getString("name"))
                         .build();
-                users.add(user);
+                projects.add(project);
             }
 
             result.close();
@@ -215,7 +216,7 @@ public class ProjectDAO extends DBConectionUtil {
             closeConnection();
 
         } catch (SQLException e) {
-            System.err.println("Error finding all users: " + e.getMessage());
+            System.err.println("Error finding all projects: " + e.getMessage());
             try {
                 closeConnection();
             } catch (SQLException closeEx) {
@@ -223,7 +224,7 @@ public class ProjectDAO extends DBConectionUtil {
             }
         }
 
-        return users;
+        return projects;
     }
 
     // Eliminar usuario por ID
@@ -232,7 +233,7 @@ public class ProjectDAO extends DBConectionUtil {
             return false;
         }
 
-        String sql = "DELETE FROM users WHERE id = ?";
+        String sql = "DELETE FROM projects WHERE id = ?";
 
         try {
             connect();
@@ -246,7 +247,7 @@ public class ProjectDAO extends DBConectionUtil {
             return affectedRows > 0;
 
         } catch (SQLException e) {
-            System.err.println("Error deleting user: " + e.getMessage());
+            System.err.println("Error deleting projects: " + e.getMessage());
             try {
                 closeConnection();
             } catch (SQLException closeEx) {
@@ -262,7 +263,7 @@ public class ProjectDAO extends DBConectionUtil {
             return false;
         }
 
-        String sql = "SELECT COUNT(*) FROM users WHERE name = ?";
+        String sql = "SELECT COUNT(*) FROM projects WHERE name = ?";
 
         try {
             connect();
@@ -283,7 +284,7 @@ public class ProjectDAO extends DBConectionUtil {
             return exists;
 
         } catch (SQLException e) {
-            System.err.println("Error checking if user exists: " + e.getMessage());
+            System.err.println("Error checking if project exists: " + e.getMessage());
             try {
                 closeConnection();
             } catch (SQLException closeEx) {
@@ -295,7 +296,7 @@ public class ProjectDAO extends DBConectionUtil {
 
     // Obtener el total de usuarios
     public int getProjectCount() {
-        String sql = "SELECT COUNT(*) FROM users";
+        String sql = "SELECT COUNT(*) FROM projects";
 
         try {
             connect();
@@ -314,7 +315,7 @@ public class ProjectDAO extends DBConectionUtil {
             return count;
 
         } catch (SQLException e) {
-            System.err.println("Error getting user count: " + e.getMessage());
+            System.err.println("Error getting project count: " + e.getMessage());
             try {
                 closeConnection();
             } catch (SQLException closeEx) {
