@@ -7,18 +7,13 @@ public class YearView extends javax.swing.JPanel {
 
     public YearView() {
         initComponents();
+        getLeftNavigation();
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        NewProject = new javax.swing.JPanel();
-        addWorkbookLabel1 = new javax.swing.JLabel();
-        newProjectName = new javax.swing.JTextField();
-        addWorkbookLabel2 = new javax.swing.JLabel();
-        newProjectYear = new javax.swing.JTextField();
-        warning = new javax.swing.JLabel();
         YearFormPanel = new javax.swing.JPanel();
         insertName = new javax.swing.JLabel();
         DateSpinner = new javax.swing.JSpinner();
@@ -29,25 +24,6 @@ public class YearView extends javax.swing.JPanel {
         openProjectButton = new javax.swing.JButton();
         leftScroll = new javax.swing.JScrollPane();
         leftNavigation = new javax.swing.JTree();
-
-        NewProject.setLayout(new javax.swing.BoxLayout(NewProject, javax.swing.BoxLayout.Y_AXIS));
-
-        addWorkbookLabel1.setText("Name*");
-        NewProject.add(addWorkbookLabel1);
-        NewProject.add(newProjectName);
-
-        addWorkbookLabel2.setText("Year");
-        NewProject.add(addWorkbookLabel2);
-
-        newProjectYear.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newProjectYearActionPerformed(evt);
-            }
-        });
-        NewProject.add(newProjectYear);
-
-        warning.setForeground(java.awt.Color.red);
-        NewProject.add(warning);
 
         YearFormPanel.setLayout(new javax.swing.BoxLayout(YearFormPanel, javax.swing.BoxLayout.Y_AXIS));
 
@@ -93,27 +69,17 @@ public class YearView extends javax.swing.JPanel {
         add(leftSibeBar, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void newProjectYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newProjectYearActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_newProjectYearActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSpinner DateSpinner;
-    private javax.swing.JPanel NewProject;
     private javax.swing.JTextField TagTextField;
     private javax.swing.JPanel YearFormPanel;
-    private javax.swing.JLabel addWorkbookLabel1;
-    private javax.swing.JLabel addWorkbookLabel2;
     private javax.swing.JLabel insertName;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JTree leftNavigation;
     private javax.swing.JScrollPane leftScroll;
     private javax.swing.JToolBar leftSibeBar;
     private javax.swing.JButton newProjectButton;
-    private javax.swing.JTextField newProjectName;
-    private javax.swing.JTextField newProjectYear;
     private javax.swing.JButton openProjectButton;
-    private javax.swing.JLabel warning;
     // End of variables declaration//GEN-END:variables
 }

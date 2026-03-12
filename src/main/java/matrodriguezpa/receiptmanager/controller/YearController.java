@@ -1,10 +1,8 @@
 package matrodriguezpa.receiptmanager.controller;
 
 import javax.swing.JOptionPane;
-import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
 
 import matrodriguezpa.receiptmanager.dao.YearDAO;
 import matrodriguezpa.receiptmanager.model.Year;
@@ -13,8 +11,10 @@ import matrodriguezpa.receiptmanager.view.YearView;
 
 public class YearController {
 
-    private final YearView yearView;
+    private static final YearView yearView;
     private static DefaultTreeModel treeModel; //Tree with all years
+
+    private static Project project;
 
     private static Year year;
     private YearDAO yearDao;
@@ -22,69 +22,149 @@ public class YearController {
     public YearController(YearView yearView, Project project) {
 
         this.yearView = yearView;
+        this.project = project;
         yearDao.createTable();
-        updateNavigationTree();
+        updateYearTree();
 
-        yearView.getNewProjectButton().addActionListener(e -> createProject());
-        yearView.getOpenProjectButton().addActionListener(e -> openProject());
+        yearView.getNewProjectButton().addActionListener(e -> createYear());
+        yearView.getOpenProjectButton().addActionListener(e -> openYear());
     }
-    
-    /*CRUD */
-    private void createProject() {
-        /*
-        while (true) {
-            int result = JOptionPane.showConfirmDialog(
-                    view,
-                    view.getNewProject(),
-                    "New Project",
-                    JOptionPane.OK_CANCEL_OPTION,
-                    JOptionPane.PLAIN_MESSAGE);
 
-            if (result != JOptionPane.OK_OPTION) {
+    private void createYear() {
+        // Mostrar diálogo para ingresar año y tag, asociado al proyecto actual
+        int result = JOptionPane.showConfirmDialog(yearView,
+                yearView.getYearFormPanel(),
+                "Create New Year",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+
+        if (result == JOptionPane.OK_OPTION) {
+            // Obtener valores del formulario
+            String yearStr = yearView.getDateSpinner().getValue().toString();
+            String tag = yearView.getTagTextField().getText().trim();
+            // Proyecto actual
+
+            // Validaciones
+            if (this.project == null) {
+                JOptionPane.showMessageDialog(yearView, "No project selected!");
+                return;
+            }
+            if (yearStr.isEmpty()) {
+                JOptionPane.showMessageDialog(yearView, "Please enter a year!");
                 return;
             }
 
-            String rawName = view.getNewProjectName().getText().trim();
-            String yearText = view.getNewProjectYear().getText().trim();
+            int yearValue;
+            try {
+                yearValue = Integer.parseInt(yearStr);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(yearView, "Year must be a valid number!");
+                return;
+            }
 
-            yearDao.isValidName(rawName);
-            yearDao.isEmpty(yearText);
-            yearDao.validateYear(yearText);
+            // Verificar si ya existe un año con ese valor para el mismo proyecto
+            if (yearDao.existsByProjectAndYear(this.project, yearValue)) {
+                JOptionPane.showMessageDialog(yearView, "Year already exists for this project!");
+                return;
+            }
 
-            year.setName(rawName.replace(' ', '_'));
-            year.setYEAR(yearDao.validateYear(yearText));
-            break;
-        }
-
-        // Load existing user instead of creating a new one
-        Project existingUser = null; //users.findById(1); // Use your UserDAO
-
-        if (existingUser == null) {
-            // Create new user if doesn't exist
-            existingUser = Project.builder()
-                    .name("Mateo")
+            // Construir objeto Year
+            Year newYear = Year.builder()
+                    .projectId(this.project.getId())
+                    .YEAR(yearValue)
+                    .tag(tag)
                     .build();
-            //userDao.save(existingUser);
+
+            // Guardar en BD
+            Long yearId = yearDao.createYear(newYear);
+            if (yearId == null) {
+                JOptionPane.showMessageDialog(yearView, "Error creating year!");
+            } else {
+                // Actualizar la vista (ej: recargar lista de años)
+                updateYearTree();
+            }
+        }
+    }
+
+    private void editYear() {
+        // Obtener el año seleccionado actualmente en la vista
+        Year selectedYear = getSelectedYear();
+        if (selectedYear == null) {
+            JOptionPane.showMessageDialog(yearView, "No year selected!");
+            return;
         }
 
-        Year newProject = Year.builder()
-                .name(year.getName())
-                .YEAR(year.getYEAR())
-                .userId(existingUser)
-                .build();
+        // Pre-cargar el formulario con los datos actuales
+        yearView.getDateSpinner().setValue(String.valueOf(selectedYear.getYEAR()));
+        yearView.getTagTextField().setText(selectedYear.getTag());
 
-        yearDao.save(newProject);
-        updateNavigationTree();
-         */
+        int result = JOptionPane.showConfirmDialog(yearView,
+                yearView.getYearFormPanel(),
+                "Edit Year",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+
+        if (result == JOptionPane.OK_OPTION) {
+            String yearStr = yearView.getDateSpinner().getValue().toString();
+            String tag = yearView.getTagTextField().getText().trim();
+
+            if (yearStr.isEmpty()) {
+                JOptionPane.showMessageDialog(yearView, "Please enter a year!");
+                return;
+            }
+
+            int yearValue;
+            try {
+                yearValue = Integer.parseInt(yearStr);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(yearView, "Year must be a valid number!");
+                return;
+            }
+
+            // Verificar si ya existe otro año con ese valor para el mismo proyecto
+            // (excluyendo el año actual)
+            if (yearDao.existsByProjectAndYear(selectedYear.getProjectId(), selectedYear.getYEAR())) {
+                JOptionPane.showMessageDialog(yearView, "Another year with that value already exists for this project!");
+                return;
+            }
+
+            // Actualizar objeto
+            selectedYear.setYEAR(yearValue);
+            selectedYear.setTag(tag);
+
+            // Guardar cambios
+            boolean updated = yearDao.updateYear(selectedYear);
+            if (updated) {
+                updateYearTree();
+            } else {
+                JOptionPane.showMessageDialog(yearView, "Error updating year!");
+            }
+        }
     }
 
-    private void updateProject() {
+    private void deleteYear() {
+        Year selectedYear = getSelectedYear();
+        if (selectedYear == null) {
+            JOptionPane.showMessageDialog(yearView, "No year selected!");
+            return;
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(yearView,
+                "Are you sure you want to delete year " + selectedYear.getYEAR() + "?",
+                "Delete Year",
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            boolean deleted = yearDao.deleteById(selectedYear.getId());
+            if (deleted) {
+                updateYearTree();
+            } else {
+                JOptionPane.showMessageDialog(yearView, "Error deleting year!");
+            }
+        }
     }
 
-    private void deleteProject() {
-    }
-
-    private void openProject() {
+    private void openYear() {
         /*
         List<Long> usersId = null;//users.findDistictUsers();
         List<Project> users2 = new ArrayList<>();
@@ -130,12 +210,25 @@ public class YearController {
          */
     }
 
-    /* Windows */
+    protected static void updateYearTree() {
+        if (project == null) {
+            DefaultMutableTreeNode emptyRoot = new DefaultMutableTreeNode("No Project Open");
+            treeModel = new DefaultTreeModel(emptyRoot);
+            yearView.getLeftNavigation().setModel(treeModel);
+            return;
 
-    
-    /*Update the view */
+        }
+        //llenar un nodo
+        //dentro de ese nodo llenar las hojas
+    }
+
+    private Year getSelectedYear() {
+        return null;
+    }
+
+    /*Update the view 
     protected static void updateNavigationTree() {
-        if (year.getName() == null) {
+        if (year.getTag() == null) {
             // Clear the tree
             DefaultMutableTreeNode emptyRoot = new DefaultMutableTreeNode("No Project Open");
             treeModel = new DefaultTreeModel(emptyRoot);
@@ -155,7 +248,7 @@ public class YearController {
             }
 
             // Create root node with project name
-            DefaultMutableTreeNode root = new DefaultMutableTreeNode(year.getName());
+            DefaultMutableTreeNode root = new DefaultMutableTreeNode(year.getTag());
 
             // Create tree model
             treeModel = new DefaultTreeModel(root);
@@ -168,17 +261,6 @@ public class YearController {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
             // Add this for debugging
-        }
-    }
-
-    private static void expandAllNodes(JTree tree, DefaultMutableTreeNode node) {
-        // Método auxiliar para expandir todos los nodos
-        int row = tree.getRowForPath(new TreePath(node.getPath()));
-        if (row != -1) {
-            tree.expandRow(row);
-            for (int i = 0; i < node.getChildCount(); i++) {
-                expandAllNodes(tree, (DefaultMutableTreeNode) node.getChildAt(i));
-            }
         }
     }
 
@@ -207,10 +289,10 @@ public class YearController {
                     parent = (DefaultMutableTreeNode) parent.getParent();
                     User.projectName = (String) parent.getUserObject();
 
-                    updateMainTable();*/
+                    updateMainTable();
                 }
             }
         }
     }
-
+     */
 }
