@@ -1,6 +1,9 @@
 package matrodriguezpa.receiptmanager.controller;
 
+import java.awt.BorderLayout;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import lombok.Setter;
@@ -16,7 +19,8 @@ import matrodriguezpa.receiptmanager.view.YearView;
 public class ProjectController {
 
     private static ProjectView projectView;
-    List<Project> projects;
+
+    private static Map<JRadioButton, Project> projects = null;
 
     private static Project project;
     private static final ProjectDAO projectDao = new ProjectDAO();
@@ -28,7 +32,9 @@ public class ProjectController {
         updateProjectList();
 
         projectView.getCreateNewUser().addActionListener(e -> createProject());
-        projectView.getOpenUserProjects().addActionListener(e -> openProject(project));
+        projectView.getOpenUserProjects1().addActionListener(e -> editProject());
+        projectView.getOpenUserProjects2().addActionListener(e -> deleteProject());
+
     }
 
     public void start() {
@@ -106,44 +112,43 @@ public class ProjectController {
     }
 
     private void openProject(Project projectSelected) {
-        if (projectSelected == null) {
-            JOptionPane.showMessageDialog(projectView, "Error",   "Select a project.", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        try {
-            // check if a project is selected
-            projectView.getMain().setVisible(false);
+        projectView.getMain().setVisible(false);
 
-            //Juntar estos tres de alguna forma
-            YearView yearView = new YearView();
-            MonthView monthView = new MonthView();
-            ExpenseView expenseView = new ExpenseView();
+        //Juntar estos tres de alguna forma
+        YearView yearView = new YearView();
+        MonthView monthView = new MonthView();
+        ExpenseView expenseView = new ExpenseView();
 
-            new YearController(yearView, ProjectController.project);
-            projectView.add(yearView);
+        projectView.add(yearView, BorderLayout.WEST);
+        //projectView.add(monthView, BorderLayout.CENTER);
+        //projectView.add(expenseView, BorderLayout.EAST);
 
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(projectView, "Error", e.getMessage(), JOptionPane.ERROR_MESSAGE);
-        }
+        new YearController(yearView, projectSelected);
+
     }
 
     private void updateProjectList() {
-        this.projects = projectDao.findAll();
         projectView.getUserSelectionPanel().removeAll();
         projectView.getUserSelectionPanel().repaint();
-        for (Project var : projects) {
-            String name = var.getName();
+
+        // Initialize the map (if it's static, make sure to clear it before reuse)
+        if (ProjectController.projects == null) {
+            ProjectController.projects = new HashMap<>();
+        } else {
+            ProjectController.projects.clear();
+        }
+
+        for (Project project : projectDao.findAll()) { // findAll() returns a List
+            String name = project.getName();
             JRadioButton button = new JRadioButton(name);
             projectView.getUserButtonGroup().add(button);
-            //Agregar creado y ultima edición
-            projectView.getUserSelectionPanel().add(button);
-            button.addActionListener(e -> openProject(var));
-        }
-    }
 
-    private void projectSelected(){
-        //Cambiar por private Project projectSelected()
-        //projectView.userButtonGroup.getSelection();
-        //return ;
+            // Store the mapping
+            ProjectController.projects.put(button, project);
+
+            button.addActionListener(e -> openProject(project));
+
+            projectView.getUserSelectionPanel().add(button);
+        }
     }
 }
