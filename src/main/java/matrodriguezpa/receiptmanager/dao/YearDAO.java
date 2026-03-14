@@ -7,8 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import matrodriguezpa.receiptmanager.model.Project;
-
 import matrodriguezpa.receiptmanager.model.Year;
 
 public class YearDAO extends DBConectionUtil {
@@ -17,12 +15,19 @@ public class YearDAO extends DBConectionUtil {
         getDataBaseUrl();
     }
 
-    // Crear tabla projects si no existe
+    /**
+     * Crea la tabla years con la estructura adecuada. Incluye las columnas: id
+     * (PK), project_id, year, tag.
+     */
     public boolean createTable() {
         String sql = "CREATE TABLE IF NOT EXISTS years ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "tag TEXT NOT NULL UNIQUE"
+                + "project_id INTEGER NOT NULL, "
+                + "year INTEGER NOT NULL, "
+                + "tag TEXT, "
+                + "UNIQUE(project_id, year)" // Evita años duplicados para un mismo proyecto
                 + ")";
+        // Opcional: FOREIGN KEY (project_id) REFERENCES projects(id) si existe la tabla projects
 
         try {
             connect();
@@ -42,19 +47,22 @@ public class YearDAO extends DBConectionUtil {
         }
     }
 
-    // Crear un nuevo proyecto y retornar el ID generado
+    /**
+     * Inserta un nuevo año en la base de datos y retorna el ID generado.
+     */
     public Long createYear(Year year) {
-        if (year == null || year.getTag() == null || year.getTag().trim().isEmpty()) {
+        if (year == null || year.getProjectId() == null || year.getTag() == null || year.getTag().trim().isEmpty()) {
             return null;
         }
 
-        String sql = "INSERT INTO years (tag) VALUES (?)";
+        String sql = "INSERT INTO years (project_id, year, tag) VALUES (?, ?, ?)";
 
         try {
             connect();
-
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                stmt.setString(1, year.getTag().trim());
+                stmt.setLong(1, year.getProjectId());
+                stmt.setInt(2, year.getYEAR());
+                stmt.setString(3, year.getTag().trim());
                 int affected = stmt.executeUpdate();
 
                 if (affected == 0) {
@@ -63,10 +71,8 @@ public class YearDAO extends DBConectionUtil {
                 }
             }
 
-            // Obtener el ID generado antes de cerrar la conexión
-            Long generatedId = getLastInsertRowId();
+            Long generatedId = getLastInsertRowId(); // Asume que este método existe en DBConectionUtil
             closeConnection();
-
             return generatedId;
 
         } catch (SQLException e) {
@@ -74,18 +80,19 @@ public class YearDAO extends DBConectionUtil {
             try {
                 closeConnection();
             } catch (SQLException ex) {
-                /* noop */
+                // noop
             }
             return null;
         }
     }
 
-    // Insertar nuevo proyecto y actualizar su id si se genera (mantener compatibilidad)
+    /**
+     * Inserta un nuevo año y actualiza su ID si la operación es exitosa.
+     */
     public Year save(Year year) {
         if (year == null) {
             return null;
         }
-
         Long generatedId = createYear(year);
         if (generatedId != null) {
             year.setId(generatedId);
@@ -94,9 +101,11 @@ public class YearDAO extends DBConectionUtil {
         return null;
     }
 
-    // Obtener todos los proyectos
+    /**
+     * Obtiene todos los años ordenados por año.
+     */
     public List<Year> findAll() {
-        String sql = "SELECT id, tag FROM years ORDER BY tag";
+        String sql = "SELECT id, project_id, year, tag FROM years ORDER BY year";
 
         List<Year> years = new ArrayList<>();
 
@@ -106,11 +115,13 @@ public class YearDAO extends DBConectionUtil {
             ResultSet rs = statement.executeQuery(sql);
 
             while (rs.next()) {
-                Year p = Year.builder()
+                Year y = Year.builder()
                         .id(rs.getLong("id"))
+                        .projectId(rs.getLong("project_id"))
+                        .YEAR(rs.getInt("year"))
                         .tag(rs.getString("tag"))
                         .build();
-                years.add(p);
+                years.add(y);
             }
 
             rs.close();
@@ -129,13 +140,15 @@ public class YearDAO extends DBConectionUtil {
         return years;
     }
 
-    // Buscar proyecto por id
+    /**
+     * Busca un año por su ID.
+     */
     public Year findById(Long id) {
         if (id == null) {
             return null;
         }
 
-        String sql = "SELECT id, tag FROM years WHERE id = ?";
+        String sql = "SELECT id, project_id, year, tag FROM years WHERE id = ?";
 
         try {
             connect();
@@ -148,6 +161,8 @@ public class YearDAO extends DBConectionUtil {
             if (rs.next()) {
                 year = Year.builder()
                         .id(rs.getLong("id"))
+                        .projectId(rs.getLong("project_id"))
+                        .YEAR(rs.getInt("year"))
                         .tag(rs.getString("tag"))
                         .build();
             }
@@ -159,7 +174,7 @@ public class YearDAO extends DBConectionUtil {
             return year;
 
         } catch (SQLException e) {
-            System.err.println("Error finding years by id: " + e.getMessage());
+            System.err.println("Error finding year by id: " + e.getMessage());
             try {
                 closeConnection();
             } catch (SQLException closeEx) {
@@ -169,20 +184,71 @@ public class YearDAO extends DBConectionUtil {
         }
     }
 
-    // Actualizar proyecto
-    public boolean updateYear(Year year) {
-        if (year == null || year.getId() == null
-                || year.getTag() == null || year.getTag().trim().isEmpty()) {
-            return false;
+    /**
+     * Obtiene todos los años pertenecientes a un proyecto específico.
+     *
+     * @param projectId ID del proyecto
+     * @return Lista de años del proyecto (vacía si no hay o si projectId es
+     * null)
+     */
+    public List<Year> findByProjectId(Long projectId) {
+        if (projectId == null) {
+            return new ArrayList<>(); // Retorna lista vacía en lugar de null
         }
 
-        String sql = "UPDATE years SET tag = ? WHERE id = ?";
+        String sql = "SELECT id, project_id, year, tag FROM years WHERE project_id = ? ORDER BY year DESC";
+        List<Year> years = new ArrayList<>();
 
         try {
             connect();
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, year.getTag().trim());
-            statement.setLong(2, year.getId());
+            statement.setLong(1, projectId);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                Year y = Year.builder()
+                        .id(rs.getLong("id"))
+                        .projectId(rs.getLong("project_id"))
+                        .YEAR(rs.getInt("year"))
+                        .tag(rs.getString("tag"))
+                        .build();
+                years.add(y);
+            }
+
+            rs.close();
+            statement.close();
+            closeConnection();
+
+        } catch (SQLException e) {
+            System.err.println("Error finding years by projectId: " + e.getMessage());
+            try {
+                closeConnection();
+            } catch (SQLException closeEx) {
+                System.err.println("Error closing connection: " + closeEx.getMessage());
+            }
+        }
+
+        return years;
+    }
+
+    /**
+     * Actualiza un año existente. Se permite modificar project_id, year y tag.
+     */
+    public boolean updateYear(Year year) {
+        if (year == null || year.getId() == null || year.getProjectId() == null
+                || year.getTag() == null || year.getTag().trim().isEmpty()) {
+            return false;
+        }
+
+        String sql = "UPDATE years SET project_id = ?, year = ?, tag = ? WHERE id = ?";
+
+        try {
+            connect();
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setLong(1, year.getProjectId());
+            statement.setInt(2, year.getYEAR());
+            statement.setString(3, year.getTag().trim());
+            statement.setLong(4, year.getId());
 
             int affectedRows = statement.executeUpdate();
             statement.close();
@@ -201,7 +267,9 @@ public class YearDAO extends DBConectionUtil {
         }
     }
 
-    // Eliminar proyecto por id
+    /**
+     * Elimina un año por su ID.
+     */
     public boolean deleteById(Long id) {
         if (id == null) {
             return false;
@@ -231,7 +299,9 @@ public class YearDAO extends DBConectionUtil {
         }
     }
 
-    // Verificar si existe proyecto por id
+    /**
+     * Verifica si existe un año con el ID dado.
+     */
     public boolean existsById(Long id) {
         if (id == null) {
             return false;
@@ -268,7 +338,9 @@ public class YearDAO extends DBConectionUtil {
         }
     }
 
-    // Obtener el total de proyectos
+    /**
+     * Retorna el número total de años registrados.
+     */
     public int getYearCount() {
         String sql = "SELECT COUNT(*) FROM years";
 
@@ -299,51 +371,7 @@ public class YearDAO extends DBConectionUtil {
         }
     }
 
-    // Obtener proyectos con información de gastos
-    public List<Year> findAllWithExpenseInfo() {
-        String sql = "SELECT p.id, p.tag, "
-                + "COUNT(e.id) as expense_count, "
-                + "COALESCE(SUM(e.amount), 0) as total_amount "
-                + "FROM years p "
-                + "LEFT JOIN expenses e ON p.id = e.year_id "
-                + "GROUP BY p.id, p.tag "
-                + "ORDER BY p.tag";
-
-        List<Year> years = new ArrayList<>();
-
-        try {
-            connect();
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery(sql);
-
-            while (rs.next()) {
-                Year p = Year.builder()
-                        .id(rs.getLong("id"))
-                        .tag(rs.getString("tag"))
-                        .build();
-
-                // Nota: Si tu modelo Project tiene campos para expense_count y total_amount,
-                // puedes agregarlos aquí. De lo contrario, esta información se puede obtener
-                // por separado cuando se necesite.
-                years.add(p);
-            }
-
-            rs.close();
-            statement.close();
-            closeConnection();
-
-        } catch (SQLException e) {
-            System.err.println("Error finding years with expense info: " + e.getMessage());
-            try {
-                closeConnection();
-            } catch (SQLException closeEx) {
-                System.err.println("Error closing connection: " + closeEx.getMessage());
-            }
-        }
-
-        return years;
-    }
-
+    // Métodos de utilidad para validación
     public static void isEmpty(String yearText) {
         if (yearText == null || yearText.trim().isEmpty()) {
             throw new IllegalArgumentException("Year cannot be empty");
@@ -364,10 +392,29 @@ public class YearDAO extends DBConectionUtil {
     }
 
     public boolean existsByProjectAndYear(Long projectId, int year) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public boolean existsByProjectAndYear(Project project, int yearValue) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (projectId == null) {
+            return false;
+        }
+        String sql = "SELECT COUNT(*) FROM years WHERE project_id = ? AND year = ?";
+        try {
+            connect();
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setLong(1, projectId);
+            stmt.setInt(2, year); // Cambiado a setInt
+            ResultSet rs = stmt.executeQuery();
+            boolean exists = rs.next() && rs.getInt(1) > 0;
+            rs.close();
+            stmt.close();
+            closeConnection();
+            return exists;
+        } catch (SQLException e) {
+            System.err.println("Error checking exists by project and year: " + e.getMessage());
+            try {
+                closeConnection();
+            } catch (SQLException ex) {
+                // ignore
+            }
+            return false;
+        }
     }
 }

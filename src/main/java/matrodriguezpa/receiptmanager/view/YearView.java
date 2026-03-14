@@ -20,8 +20,8 @@ public class YearView extends javax.swing.JPanel {
         TagTextField = new javax.swing.JTextField();
         leftSibeBar = new javax.swing.JToolBar();
         jToolBar1 = new javax.swing.JToolBar();
-        newProjectButton = new javax.swing.JButton();
-        openProjectButton = new javax.swing.JButton();
+        newMonthButton = new javax.swing.JButton();
+        openMonthButton = new javax.swing.JButton();
         leftScroll = new javax.swing.JScrollPane();
         leftNavigation = new javax.swing.JTree();
 
@@ -31,7 +31,12 @@ public class YearView extends javax.swing.JPanel {
         YearFormPanel.add(insertName);
         YearFormPanel.add(DateSpinner);
 
-        TagTextField.setText("Nuevo usuario");
+        TagTextField.setText("Tag");
+        TagTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TagTextFieldActionPerformed(evt);
+            }
+        });
         YearFormPanel.add(TagTextField);
 
         setLayout(new java.awt.BorderLayout());
@@ -44,19 +49,24 @@ public class YearView extends javax.swing.JPanel {
 
         jToolBar1.setRollover(true);
 
-        newProjectButton.setBackground(new java.awt.Color(255, 102, 102));
-        newProjectButton.setText("New");
-        newProjectButton.setFocusable(false);
-        newProjectButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        newProjectButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(newProjectButton);
+        newMonthButton.setBackground(new java.awt.Color(255, 102, 102));
+        newMonthButton.setText("New");
+        newMonthButton.setFocusable(false);
+        newMonthButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        newMonthButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        newMonthButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newMonthButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(newMonthButton);
 
-        openProjectButton.setBackground(new java.awt.Color(0, 102, 255));
-        openProjectButton.setText("Open");
-        openProjectButton.setFocusable(false);
-        openProjectButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        openProjectButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(openProjectButton);
+        openMonthButton.setBackground(new java.awt.Color(0, 102, 255));
+        openMonthButton.setText("Open");
+        openMonthButton.setFocusable(false);
+        openMonthButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        openMonthButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(openMonthButton);
 
         leftSibeBar.add(jToolBar1);
 
@@ -69,6 +79,14 @@ public class YearView extends javax.swing.JPanel {
         add(leftSibeBar, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void newMonthButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMonthButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_newMonthButtonActionPerformed
+
+    private void TagTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TagTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TagTextFieldActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSpinner DateSpinner;
@@ -79,7 +97,7 @@ public class YearView extends javax.swing.JPanel {
     private javax.swing.JTree leftNavigation;
     private javax.swing.JScrollPane leftScroll;
     private javax.swing.JToolBar leftSibeBar;
-    private javax.swing.JButton newProjectButton;
-    private javax.swing.JButton openProjectButton;
+    private javax.swing.JButton newMonthButton;
+    private javax.swing.JButton openMonthButton;
     // End of variables declaration//GEN-END:variables
 }

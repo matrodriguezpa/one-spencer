@@ -1,23 +1,39 @@
 package matrodriguezpa.receiptmanager.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import matrodriguezpa.receiptmanager.dao.ExpenseDAO;
 
 import matrodriguezpa.receiptmanager.dao.MonthDAO;
+import matrodriguezpa.receiptmanager.model.Expense;
 import matrodriguezpa.receiptmanager.model.Month;
+import matrodriguezpa.receiptmanager.view.ExpenseView;
 import matrodriguezpa.receiptmanager.view.MonthView;
 
 public class MonthController {
 
-    private MonthView monthView;
+    private static Month month;
+
+    private static MonthView monthView;
+    private static ExpenseView expenseView;
+
     private static DefaultTableModel tableModel;
+    private static List<Expense> expenses = new ArrayList<>();
 
-    private Month month = new Month();
-    private MonthDAO monthDao = new MonthDAO();
+    private final MonthDAO monthDao = new MonthDAO();
+    private static final ExpenseDAO expenseDao = new ExpenseDAO();
 
-    private ExpenseController expenseController;
+    public MonthController(MonthView monthView, ExpenseView expenseView, Month selectedMonth) {
+        MonthController.monthView = monthView;
+        MonthController.expenseView = expenseView;
 
-    public MonthController(MonthView monthView) {
-        this.monthView = monthView;
+        MonthController.month = selectedMonth;
+
+        monthDao.createTable();
+        updateMainTable();
+
+        //monthView.getMainTable().getSelectionModel().addListSelectionListener(e -> openExpense());
     }
 
     public void createMonth() {
@@ -29,31 +45,33 @@ public class MonthController {
     public void deleteMonth() {
     }
 
-    /*
-    protected static void updateMainTable() {
-        tableModel = (DefaultTableModel) view.getMainTable().getModel();
-        tableModel.setRowCount(0);
-
-        if (User.projectName == null) {
+    private static void updateMainTable() {
+        if (month == null || month.getId() == null) {
             return;
         }
 
-        String sql = "SELECT * FROM " + User.projectName + "_" + User.projectYear + "_" + User.proyectMonth;
-        System.out.println("Consulta SQL: " + sql);
-        Expense[] expenses = null; //userDao.find(sql);
-
+        tableModel = (DefaultTableModel) monthView.getMainTable().getModel();
+        tableModel.setRowCount(0);
+        MonthController.expenses = expenseDao.findByMonthId(month.getId());
+        System.out.println(expenses);
         for (Expense expense : expenses) {
             tableModel.addRow(new Object[]{
-                expense.getYEAR(),
-                expense.getCompany(),
-                expense.getPayment()
-            //Etc
+                expense.getDAY(), // Día
+                expense.getCompany(), // Compañía
+                expense.getAmount(), // Importe formateado
+                expense.getType(), // Tipo de gasto
+                expense.getMatrix(), // Matriz
+                expense.getPayment(), // Forma de pago
             });
         }
-        view.getExpenseDateYear().setValue(Integer.valueOf(User.projectYear));
-        view.getExpenseDateMonth().setValue(Integer.valueOf(User.proyectMonth));
+        monthView.getMainTable().repaint();
     }
-     */
-    public void closeMainTable() {
+
+    private void openExpense() { // Evita eventos intermedios
+        int selectedRow = monthView.getMainTable().getSelectedRow();
+        if (selectedRow != -1 && selectedRow < expenses.size()) {
+            Expense expense = expenses.get(selectedRow);
+            new ExpenseController(expenseView, expense);
+        }
     }
 }

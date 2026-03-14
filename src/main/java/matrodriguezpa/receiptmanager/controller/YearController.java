@@ -1,33 +1,54 @@
 package matrodriguezpa.receiptmanager.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import matrodriguezpa.receiptmanager.dao.MonthDAO;
 
 import matrodriguezpa.receiptmanager.dao.YearDAO;
+import matrodriguezpa.receiptmanager.model.Month;
 import matrodriguezpa.receiptmanager.model.Year;
 import matrodriguezpa.receiptmanager.model.Project;
+import matrodriguezpa.receiptmanager.view.ExpenseView;
+import matrodriguezpa.receiptmanager.view.MonthView;
 import matrodriguezpa.receiptmanager.view.YearView;
 
 public class YearController {
 
-    private static final YearView yearView;
-    private static DefaultTreeModel treeModel; //Tree with all years
-
     private static Project project;
 
-    private static Year year;
-    private YearDAO yearDao;
+    private static YearView yearView;
+    private static MonthView monthView;
+    private static ExpenseView expenseView;
 
-    public YearController(YearView yearView, Project project) {
+    private static DefaultTreeModel treeModel;
+    private static final Map<DefaultMutableTreeNode, Month> monthNodes = new HashMap<>();
 
-        this.yearView = yearView;
-        this.project = project;
+    private static final YearDAO yearDao = new YearDAO();
+    private static final MonthDAO monthDao = new MonthDAO();
+
+    public YearController(YearView yearView, MonthView monthView, ExpenseView expenseView, Project project) {
+        YearController.yearView = yearView;
+        YearController.monthView = monthView;
+        YearController.expenseView = expenseView;
+
+        YearController.project = project;
+
         yearDao.createTable();
+        monthDao.createTable();
         updateYearTree();
 
-        yearView.getNewProjectButton().addActionListener(e -> createYear());
-        yearView.getOpenProjectButton().addActionListener(e -> openYear());
+        yearView.getNewMonthButton().addActionListener(e -> createYear());
+        yearView.getLeftNavigation().addTreeSelectionListener(e -> {
+            DefaultMutableTreeNode selectedNode
+                    = (DefaultMutableTreeNode) yearView
+                            .getLeftNavigation()
+                            .getLastSelectedPathComponent();
+            openMonth(selectedNode);
+        });
     }
 
     private void createYear() {
@@ -63,7 +84,7 @@ public class YearController {
             }
 
             // Verificar si ya existe un año con ese valor para el mismo proyecto
-            if (yearDao.existsByProjectAndYear(this.project, yearValue)) {
+            if (yearDao.existsByProjectAndYear(this.project.getId(), yearValue)) {
                 JOptionPane.showMessageDialog(yearView, "Year already exists for this project!");
                 return;
             }
@@ -88,7 +109,7 @@ public class YearController {
 
     private void editYear() {
         // Obtener el año seleccionado actualmente en la vista
-        Year selectedYear = getSelectedYear();
+        Year selectedYear = null; // mostrar lista para escojer el ano
         if (selectedYear == null) {
             JOptionPane.showMessageDialog(yearView, "No year selected!");
             return;
@@ -143,7 +164,7 @@ public class YearController {
     }
 
     private void deleteYear() {
-        Year selectedYear = getSelectedYear();
+        Year selectedYear = null; // mostrar lista para escojer el ano
         if (selectedYear == null) {
             JOptionPane.showMessageDialog(yearView, "No year selected!");
             return;
@@ -164,135 +185,54 @@ public class YearController {
         }
     }
 
-    private void openYear() {
-        /*
-        List<Long> usersId = null;//users.findDistictUsers();
-        List<Project> users2 = new ArrayList<>();
-
-        for (Long user : usersId) {
-            //users2.add(users.findByIdLong(user));
-        }
-
-        if (users2.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Tabla usuarios no existente o no hay usuarios en la tabla.");
-            return;
-        }
-
-        // Crear un ButtonGroup para que los radio buttons sean mutuamente excluyentes
-        ButtonGroup grupoUsuarios = new ButtonGroup();
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS)); // Usamos un layout vertical para los radio buttons
-
-        // Crear un radio button por cada usuario y añadirlo al panel
-        for (Project usuario : users2) {
-            JRadioButton radioButton = new JRadioButton(usuario.getName());
-            grupoUsuarios.add(radioButton); // Añadimos el radio button al grupo
-            panel.add(radioButton); // Añadimos el radio button al panel
-        }
-
-        // Mostrar el diálogo con el panel de radio buttons
-        int result = JOptionPane
-                .showConfirmDialog(null, panel, "Open project", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-        if (result == JOptionPane.OK_OPTION) {
-            // Buscar el radio button seleccionado
-            Enumeration<AbstractButton> elementos = grupoUsuarios.getElements();
-            while (elementos.hasMoreElements()) {
-                AbstractButton radioButton = elementos.nextElement();
-                if (radioButton.isSelected()) {
-                    //User.projectName = radioButton.getText();// Asigna el usuario seleccionado a projectYear
-                    //Controller.updateNavigationTree();
-                    break;
-                }
-            }
-            //mostrar los botones de agregar años, mes y gastos 
-            //Controller.updateView(true);
-        }
-         */
-    }
-
+    // Variable de instancia en la clase (por ejemplo, YearController)
     protected static void updateYearTree() {
         if (project == null) {
             DefaultMutableTreeNode emptyRoot = new DefaultMutableTreeNode("No Project Open");
             treeModel = new DefaultTreeModel(emptyRoot);
             yearView.getLeftNavigation().setModel(treeModel);
             return;
-
         }
-        //llenar un nodo
-        //dentro de ese nodo llenar las hojas
-    }
 
-    private Year getSelectedYear() {
-        return null;
-    }
+        // Limpiar el mapa antes de reconstruir
+        monthNodes.clear();
 
-    /*Update the view 
-    protected static void updateNavigationTree() {
-        if (year.getTag() == null) {
-            // Clear the tree
-            DefaultMutableTreeNode emptyRoot = new DefaultMutableTreeNode("No Project Open");
-            treeModel = new DefaultTreeModel(emptyRoot);
-            //view.getLeftNavigation().setModel(treeModel);
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(project.getName());
 
-            return;
-        }
-        try {
-            //Project project = ProjectController.findByUserAndYear(project.getUserId(), project.getYEAR()); //TODO
-
-            if (year == null) {
-                // Project not found
-                DefaultMutableTreeNode emptyRoot = new DefaultMutableTreeNode("Project Not Found");
-                treeModel = new DefaultTreeModel(emptyRoot);
-                //view.getLeftNavigation().setModel(treeModel);
-                return;
+        for (Year projectYear : yearDao.findByProjectId(project.getId())) {
+            String yearText = String.valueOf(projectYear.getYEAR());
+            String tag = projectYear.getTag();
+            if (tag != null && !tag.trim().isEmpty()) {
+                yearText += " (" + tag + ")";
             }
 
-            // Create root node with project name
-            DefaultMutableTreeNode root = new DefaultMutableTreeNode(year.getTag());
+            DefaultMutableTreeNode yearNode = new DefaultMutableTreeNode(yearText);
+            // Si quieres asociar el objeto Year al nodo de año, puedes mantener el userObject:
+            // yearNode.setUserObject(projectYear);
 
-            // Create tree model
-            treeModel = new DefaultTreeModel(root);
-            //getLeftNavigation().setModel(treeModel);
-
-            // Expand all nodes
-            //expandAllNodes(view.getLeftNavigation(), root);
-            LeftNavigationValueChanged(root);
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
-            // Add this for debugging
+            List<Month> months = monthDao.findByYearId(projectYear.getId());
+            for (Month month : months) {
+                // El nodo solo tendrá el nombre (número de mes)
+                String monthName = String.valueOf(month.getMONTH());
+                DefaultMutableTreeNode monthNode = new DefaultMutableTreeNode(monthName);
+                // NO se guarda el objeto Month en el userObject, solo en el mapa
+                monthNodes.put(monthNode, month);
+                yearNode.add(monthNode);
+            }
+            root.add(yearNode);
         }
+
+        treeModel = new DefaultTreeModel(root);
+        yearView.getLeftNavigation().setModel(treeModel);
     }
 
-    private static void LeftNavigationValueChanged(DefaultMutableTreeNode root) {
-        // Buscar la primera hoja del árbol
-        DefaultMutableTreeNode currentNode = root;
-        while (!currentNode.isLeaf() && currentNode.getChildCount() > 0) {
-            currentNode = (DefaultMutableTreeNode) currentNode.getFirstChild();
-        }
-
-        if (currentNode != root) {  // Si encontramos una hoja (que no sea el root)
-            // view.getLeftNavigation().setSelectionPath(new TreePath(currentNode.getPath()));
-            //TreePath selectedPath = view.getLeftNavigation().getSelectionPath();
-            TreePath selectedPath = null;
-            // Verificar si hay un nodo seleccionado
-            if (selectedPath != null) {
-                // Obtener el nodo seleccionado
-                DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) selectedPath.getLastPathComponent();
-
-                // Verificar si el nodo es una hoja (nodo final)
-                if (selectedNode.isLeaf()) {
-                    /* Asignar el valor del mes correspondiente al nodo seleccionado
-                    User.proyectMonth = (String) selectedNode.getUserObject(); // Asegúrate de que el objeto sea del tipo adecuado
-                    DefaultMutableTreeNode parent = (DefaultMutableTreeNode) selectedNode.getParent();
-                    User.projectYear = (String) parent.getUserObject(); // Asegúrate de que el objeto sea del tipo adecuado
-                    parent = (DefaultMutableTreeNode) parent.getParent();
-                    User.projectName = (String) parent.getUserObject();
-
-                    updateMainTable();
-                }
+    private void openMonth(DefaultMutableTreeNode selectedNode) {
+        if (selectedNode != null && selectedNode.isLeaf()) {
+            Month selectedMonth = monthNodes.get(selectedNode);
+            if (selectedMonth != null) {
+                monthView.setEnabled(true);
+                new MonthController(monthView, expenseView, selectedMonth);
             }
         }
     }
-     */
 }

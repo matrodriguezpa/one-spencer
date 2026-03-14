@@ -626,6 +626,65 @@ public class ExpenseDAO extends DBConectionUtil {
         }
     }
 
+    public List<Expense> findByMonthId(Long monthId) {
+        List<Expense> expenses = new ArrayList<>();
+
+        if (monthId == null) {
+            return expenses;
+        }
+
+        String sql = "SELECT id, project_id, year_id, month_id, year, month, day, company, amount, type, matrix, payment FROM expenses WHERE month_id = ? ORDER BY year, month, day";
+
+        try {
+            connect();
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setLong(1, monthId);
+
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                Number pNum = (Number) rs.getObject("project_id");
+                Long projectId = pNum != null ? pNum.longValue() : null;
+
+                Number yIdNum = (Number) rs.getObject("year_id");
+                Long yearId = yIdNum != null ? yIdNum.longValue() : null;
+
+                Number mIdNum = (Number) rs.getObject("month_id");
+                Long monthIdFromDb = mIdNum != null ? mIdNum.longValue() : null; // but we could just use monthId param
+
+                Expense exp = Expense.builder()
+                        .id(rs.getLong("id"))
+                        .ProjectId(projectId)
+                        .yearId(yearId)
+                        .MonthId(monthIdFromDb)
+                        .YEAR(rs.getInt("year"))
+                        .MONTH(rs.getInt("month"))
+                        .DAY(rs.getInt("day"))
+                        .company(rs.getString("company"))
+                        .amount(rs.getDouble("amount"))
+                        .type(rs.getString("type"))
+                        .matrix(rs.getString("matrix"))
+                        .payment(rs.getString("payment"))
+                        .build();
+                expenses.add(exp);
+            }
+
+            rs.close();
+            statement.close();
+            closeConnection();
+
+        } catch (SQLException e) {
+            System.err.println("Error finding expenses by month id: " + e.getMessage());
+            try {
+                closeConnection();
+            } catch (SQLException closeEx) {
+                System.err.println("Error closing connection: " + closeEx.getMessage());
+            }
+        }
+
+        return expenses;
+    }
+
     /**
      * Validates that the date is in valid day/month range.
      *

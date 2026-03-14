@@ -4,10 +4,13 @@
  */
 package matrodriguezpa.receiptmanager.view;
 
+import lombok.Getter;
+
 /**
  *
  * @author Juan Camilo
  */
+@Getter
 public class MonthView extends javax.swing.JPanel {
 
     /**
@@ -29,27 +32,11 @@ public class MonthView extends javax.swing.JPanel {
         mainTableScroll = new javax.swing.JScrollPane();
         mainTable = new javax.swing.JTable();
         mainTableHeader = new javax.swing.JToolBar();
-        addProject = new javax.swing.JButton();
         addMonth = new javax.swing.JButton();
+        EditExpense = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
 
-        mainTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Expense date", "Company name", "Amount", "Expense", "Matrix", "Payment Method"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
         mainTableScroll.setViewportView(mainTable);
 
         add(mainTableScroll, java.awt.BorderLayout.CENTER);
@@ -59,14 +46,6 @@ public class MonthView extends javax.swing.JPanel {
         mainTableHeader.setMinimumSize(new java.awt.Dimension(150, 30));
         mainTableHeader.setPreferredSize(new java.awt.Dimension(150, 30));
         mainTableHeader.setRequestFocusEnabled(false);
-
-        addProject.setBackground(new java.awt.Color(51, 102, 255));
-        addProject.setForeground(new java.awt.Color(255, 255, 255));
-        addProject.setText("AddProject");
-        addProject.setFocusable(false);
-        addProject.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        addProject.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        mainTableHeader.add(addProject);
 
         addMonth.setBackground(new java.awt.Color(51, 102, 255));
         addMonth.setForeground(new java.awt.Color(255, 255, 255));
@@ -81,6 +60,19 @@ public class MonthView extends javax.swing.JPanel {
         });
         mainTableHeader.add(addMonth);
 
+        EditExpense.setBackground(new java.awt.Color(51, 102, 255));
+        EditExpense.setForeground(new java.awt.Color(255, 255, 255));
+        EditExpense.setText("Edit Expense");
+        EditExpense.setFocusable(false);
+        EditExpense.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        EditExpense.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        EditExpense.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EditExpenseActionPerformed(evt);
+            }
+        });
+        mainTableHeader.add(EditExpense);
+
         add(mainTableHeader, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -88,10 +80,14 @@ public class MonthView extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_addMonthActionPerformed
 
+    private void EditExpenseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditExpenseActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_EditExpenseActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton EditExpense;
     private javax.swing.JButton addMonth;
-    private javax.swing.JButton addProject;
     private javax.swing.JTable mainTable;
     private javax.swing.JToolBar mainTableHeader;
     private javax.swing.JScrollPane mainTableScroll;

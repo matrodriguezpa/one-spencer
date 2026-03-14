@@ -16,13 +16,13 @@ public class MonthDAO extends DBConectionUtil {
 
     // Crear tabla months si no existe
     public boolean createTable() {
-        String sql = "CREATE TABLE IF NOT EXISTS months (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "year_id INTEGER NOT NULL, " +
-                "month INTEGER NOT NULL, " +
-                "FOREIGN KEY (year_id) REFERENCES years(id), " +
-                "UNIQUE(year_id, month)" +
-                ")";
+        String sql = "CREATE TABLE IF NOT EXISTS months ("
+                + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "year_id INTEGER NOT NULL, "
+                + "month INTEGER NOT NULL, "
+                + "FOREIGN KEY (year_id) REFERENCES years(id), "
+                + "UNIQUE(year_id, month)"
+                + ")";
 
         try {
             connect();
@@ -342,4 +342,17 @@ public class MonthDAO extends DBConectionUtil {
             throw new IllegalArgumentException("Month must be between 1 and 12");
         }
     }
+
+    public static String getMonthName(int monthNumber) {
+        String[] months = {
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        };
+        if (monthNumber >= 1 && monthNumber <= 12) {
+            return months[monthNumber - 1];
+        } else {
+            return "Unknown Month";
+        }
+    }
+    
 }

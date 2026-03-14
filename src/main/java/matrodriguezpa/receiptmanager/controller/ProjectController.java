@@ -2,7 +2,6 @@ package matrodriguezpa.receiptmanager.controller;
 
 import java.awt.BorderLayout;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
@@ -19,15 +18,21 @@ import matrodriguezpa.receiptmanager.view.YearView;
 public class ProjectController {
 
     private static ProjectView projectView;
+    private final YearView yearView;
+    private final MonthView monthView;
+    private final ExpenseView expenseView;
 
     private static Map<JRadioButton, Project> projects = null;
 
-    private static Project project;
     private static final ProjectDAO projectDao = new ProjectDAO();
 
     public ProjectController(ProjectView projectView) {
 
         ProjectController.projectView = projectView;
+        this.yearView = new YearView();
+        this.monthView = new MonthView();
+        this.expenseView = new ExpenseView();
+
         projectDao.createTable();
         updateProjectList();
 
@@ -114,17 +119,15 @@ public class ProjectController {
     private void openProject(Project projectSelected) {
         projectView.getMain().setVisible(false);
 
-        //Juntar estos tres de alguna forma
-        YearView yearView = new YearView();
-        MonthView monthView = new MonthView();
-        ExpenseView expenseView = new ExpenseView();
-
         projectView.add(yearView, BorderLayout.WEST);
-        //projectView.add(monthView, BorderLayout.CENTER);
-        //projectView.add(expenseView, BorderLayout.EAST);
+        projectView.add(monthView, BorderLayout.CENTER);
+        projectView.add(expenseView, BorderLayout.EAST);
 
-        new YearController(yearView, projectSelected);
-
+        yearView.setEnabled(true);
+        monthView.setEnabled(false);
+        expenseView.setEnabled(false);
+        
+        new YearController(yearView, monthView, expenseView, projectSelected);
     }
 
     private void updateProjectList() {

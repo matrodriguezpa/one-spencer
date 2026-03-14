@@ -2,24 +2,24 @@ package matrodriguezpa.receiptmanager.controller;
 
 import javax.swing.JOptionPane;
 import matrodriguezpa.receiptmanager.dao.ExpenseDAO;
+import matrodriguezpa.receiptmanager.dao.MonthDAO;
 import matrodriguezpa.receiptmanager.model.Expense;
 import matrodriguezpa.receiptmanager.view.ExpenseView;
 
 public class ExpenseController {
 
-    ExpenseView expenseView;
+    private static Expense expense;
 
-    private static Expense expenseobj = new Expense();
-    ExpenseDAO expenseDao = new ExpenseDAO();
+    private static ExpenseView expenseView;
 
-    public ExpenseController(ExpenseView expenseview) {
-        this.expenseView = expenseview;
+    private final MonthDAO monthDao = new MonthDAO();
+    private static ExpenseDAO expenseDao = new ExpenseDAO();
 
+    public ExpenseController(ExpenseView expenseview, Expense selectedExpense) {
+        ExpenseController.expenseView = expenseview;
+        ExpenseController.expense = selectedExpense;
+        expenseDao.createTable();
         expenseView.getAddExpense().addActionListener(e -> createExpense());
-        expenseView.getAddCompanyButton().addActionListener(e -> ExpenseController.this.updateExpense(0));
-        expenseView.getAddExpenseButton().addActionListener(e -> ExpenseController.this.updateExpense(1));
-        expenseView.getAddMatrixButton().addActionListener(e -> ExpenseController.this.updateExpense(2));
-        expenseView.getAddPaymentButton().addActionListener(e -> ExpenseController.this.updateExpense(3));
     }
 
     private void createExpense() {
@@ -62,32 +62,7 @@ public class ExpenseController {
         JOptionPane.showMessageDialog(null, "Inserción exitosa.");
     }
 
-    //agregar datos para el usuario visualizar
-    private void updateExpense(int index) {//el indice seleccionadode la lista company, expense, matrix, payment
-
-        /*expenseView.getAddExpensedata().setSelectedIndex(index);
-
-        int result = JOptionPane.showConfirmDialog(null,
-                expenseView.getExpenseDataLoader(),
-                "Enter Expense",
-                JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE
-        );
-
-        if (result == JOptionPane.OK_OPTION) {
-            String resultado = expenseView.getNewExpenseData().getText();
-            switch (index) {
-                case 0 ->
-                    expenseView.getCompany().addItem(resultado);
-                case 1 ->
-                    expenseView.getExpense().addItem(resultado);
-                case 2 ->
-                    expenseView.getMatrix().addItem(resultado);
-                case 3 ->
-                    expenseView.getPayment().addItem(resultado);
-
-            }
-        }*/
+    private void updateExpense() {
     }
 
     private void deleteExpense() {
