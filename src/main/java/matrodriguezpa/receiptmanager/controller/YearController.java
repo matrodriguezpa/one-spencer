@@ -12,17 +12,14 @@ import matrodriguezpa.receiptmanager.dao.YearDAO;
 import matrodriguezpa.receiptmanager.model.Month;
 import matrodriguezpa.receiptmanager.model.Year;
 import matrodriguezpa.receiptmanager.model.Project;
-import matrodriguezpa.receiptmanager.view.ExpenseView;
-import matrodriguezpa.receiptmanager.view.MonthView;
 import matrodriguezpa.receiptmanager.view.YearView;
 
 public class YearController {
 
+    private static ProjectController projectController;
     private static Project project;
 
     private static YearView yearView;
-    private static MonthView monthView;
-    private static ExpenseView expenseView;
 
     private static DefaultTreeModel treeModel;
     private static final Map<DefaultMutableTreeNode, Month> monthNodes = new HashMap<>();
@@ -30,12 +27,11 @@ public class YearController {
     private static final YearDAO yearDao = new YearDAO();
     private static final MonthDAO monthDao = new MonthDAO();
 
-    public YearController(YearView yearView, MonthView monthView, ExpenseView expenseView, Project project) {
-        YearController.yearView = yearView;
-        YearController.monthView = monthView;
-        YearController.expenseView = expenseView;
+    public YearController(ProjectController projectController, YearView yearView, Project projectSelected) {
 
-        YearController.project = project;
+        YearController.projectController = projectController;
+        YearController.yearView = yearView;
+        YearController.project = projectSelected;
 
         yearDao.createTable();
         monthDao.createTable();
@@ -43,10 +39,9 @@ public class YearController {
 
         yearView.getNewMonthButton().addActionListener(e -> createYear());
         yearView.getLeftNavigation().addTreeSelectionListener(e -> {
-            DefaultMutableTreeNode selectedNode
-                    = (DefaultMutableTreeNode) yearView
-                            .getLeftNavigation()
-                            .getLastSelectedPathComponent();
+            DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) yearView
+                    .getLeftNavigation()
+                    .getLastSelectedPathComponent();
             openMonth(selectedNode);
         });
     }
@@ -185,7 +180,6 @@ public class YearController {
         }
     }
 
-    // Variable de instancia en la clase (por ejemplo, YearController)
     protected static void updateYearTree() {
         if (project == null) {
             DefaultMutableTreeNode emptyRoot = new DefaultMutableTreeNode("No Project Open");
@@ -230,8 +224,7 @@ public class YearController {
         if (selectedNode != null && selectedNode.isLeaf()) {
             Month selectedMonth = monthNodes.get(selectedNode);
             if (selectedMonth != null) {
-                monthView.setEnabled(true);
-                new MonthController(monthView, expenseView, selectedMonth);
+                projectController.openMonth(selectedMonth);
             }
         }
     }

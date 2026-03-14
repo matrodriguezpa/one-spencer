@@ -15,7 +15,7 @@ public class ExpenseController {
     private final MonthDAO monthDao = new MonthDAO();
     private static ExpenseDAO expenseDao = new ExpenseDAO();
 
-    public ExpenseController(ExpenseView expenseview, Expense selectedExpense) {
+    public ExpenseController(ProjectController aThis, ExpenseView expenseview, Expense selectedExpense) {
         ExpenseController.expenseView = expenseview;
         ExpenseController.expense = selectedExpense;
         expenseDao.createTable();

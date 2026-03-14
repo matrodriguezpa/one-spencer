@@ -8,15 +8,14 @@ import matrodriguezpa.receiptmanager.dao.ExpenseDAO;
 import matrodriguezpa.receiptmanager.dao.MonthDAO;
 import matrodriguezpa.receiptmanager.model.Expense;
 import matrodriguezpa.receiptmanager.model.Month;
-import matrodriguezpa.receiptmanager.view.ExpenseView;
 import matrodriguezpa.receiptmanager.view.MonthView;
 
 public class MonthController {
 
     private static Month month;
+    private static ProjectController projectController;
 
     private static MonthView monthView;
-    private static ExpenseView expenseView;
 
     private static DefaultTableModel tableModel;
     private static List<Expense> expenses = new ArrayList<>();
@@ -24,16 +23,15 @@ public class MonthController {
     private final MonthDAO monthDao = new MonthDAO();
     private static final ExpenseDAO expenseDao = new ExpenseDAO();
 
-    public MonthController(MonthView monthView, ExpenseView expenseView, Month selectedMonth) {
+    public MonthController(ProjectController projectController, MonthView monthView, Month selectedMonth) {
+        MonthController.projectController = projectController;
         MonthController.monthView = monthView;
-        MonthController.expenseView = expenseView;
-
         MonthController.month = selectedMonth;
 
         monthDao.createTable();
         updateMainTable();
 
-        //monthView.getMainTable().getSelectionModel().addListSelectionListener(e -> openExpense());
+        monthView.getMainTable().getSelectionModel().addListSelectionListener(e -> openExpense());
     }
 
     public void createMonth() {
@@ -71,7 +69,7 @@ public class MonthController {
         int selectedRow = monthView.getMainTable().getSelectedRow();
         if (selectedRow != -1 && selectedRow < expenses.size()) {
             Expense expense = expenses.get(selectedRow);
-            new ExpenseController(expenseView, expense);
+            projectController.openExpense(expense);
         }
     }
 }

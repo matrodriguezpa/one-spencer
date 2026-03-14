@@ -9,6 +9,8 @@ import lombok.Setter;
 
 import matrodriguezpa.receiptmanager.model.Project;
 import matrodriguezpa.receiptmanager.dao.ProjectDAO;
+import matrodriguezpa.receiptmanager.model.Expense;
+import matrodriguezpa.receiptmanager.model.Month;
 import matrodriguezpa.receiptmanager.view.ExpenseView;
 import matrodriguezpa.receiptmanager.view.MonthView;
 import matrodriguezpa.receiptmanager.view.ProjectView;
@@ -21,6 +23,8 @@ public class ProjectController {
     private final YearView yearView;
     private final MonthView monthView;
     private final ExpenseView expenseView;
+
+    private Project project;
 
     private static Map<JRadioButton, Project> projects = null;
 
@@ -116,20 +120,6 @@ public class ProjectController {
         }
     }
 
-    private void openProject(Project projectSelected) {
-        projectView.getMain().setVisible(false);
-
-        projectView.add(yearView, BorderLayout.WEST);
-        projectView.add(monthView, BorderLayout.CENTER);
-        projectView.add(expenseView, BorderLayout.EAST);
-
-        yearView.setEnabled(true);
-        monthView.setEnabled(false);
-        expenseView.setEnabled(false);
-        
-        new YearController(yearView, monthView, expenseView, projectSelected);
-    }
-
     private void updateProjectList() {
         projectView.getUserSelectionPanel().removeAll();
         projectView.getUserSelectionPanel().repaint();
@@ -153,5 +143,27 @@ public class ProjectController {
 
             projectView.getUserSelectionPanel().add(button);
         }
+    }
+
+    private void openProject(Project projectSelected) {
+        projectView.getMain().setVisible(false);
+
+        projectView.add(yearView, BorderLayout.WEST);
+        projectView.add(monthView, BorderLayout.CENTER);
+        projectView.add(expenseView, BorderLayout.EAST);
+
+        openYear(projectSelected);
+    }
+
+    public void openYear(Project projectSelected) {
+        new YearController(this, yearView, projectSelected);
+    }
+
+    protected void openMonth(Month selectedMonth) {
+        new MonthController(this, monthView, selectedMonth);
+    }
+
+    public void openExpense(Expense expense) {
+        new ExpenseController(this, expenseView, expense);
     }
 }
