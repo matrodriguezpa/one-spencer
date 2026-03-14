@@ -1,6 +1,6 @@
 package matrodriguezpa.receiptmanager.model;
 
-import matrodriguezpa.receiptmanager.Util.DBConectionUtil;
+import matrodriguezpa.receiptmanager.util.DBConectionUtil;
 import lombok.*;
 
 @Getter

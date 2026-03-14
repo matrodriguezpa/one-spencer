@@ -1,4 +1,4 @@
-package matrodriguezpa.receiptmanager.Util;
+package matrodriguezpa.receiptmanager.util;
 
 import java.io.IOException;
 

@@ -3,7 +3,7 @@ package matrodriguezpa.receiptmanager.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import matrodriguezpa.receiptmanager.Util.DBConectionUtil;
+import matrodriguezpa.receiptmanager.util.DBConectionUtil;
 import lombok.*;
 
 @Getter

@@ -24,9 +24,7 @@ public class ProjectController {
     private final MonthView monthView;
     private final ExpenseView expenseView;
 
-    private Project project;
-
-    private static Map<JRadioButton, Project> projects = null;
+    private static Map<JRadioButton, Project> projectsMap = null;
 
     private static final ProjectDAO projectDao = new ProjectDAO();
 
@@ -125,10 +123,10 @@ public class ProjectController {
         projectView.getUserSelectionPanel().repaint();
 
         // Initialize the map (if it's static, make sure to clear it before reuse)
-        if (ProjectController.projects == null) {
-            ProjectController.projects = new HashMap<>();
+        if (ProjectController.projectsMap == null) {
+            ProjectController.projectsMap = new HashMap<>();
         } else {
-            ProjectController.projects.clear();
+            ProjectController.projectsMap.clear();
         }
 
         for (Project project : projectDao.findAll()) { // findAll() returns a List
@@ -137,7 +135,7 @@ public class ProjectController {
             projectView.getUserButtonGroup().add(button);
 
             // Store the mapping
-            ProjectController.projects.put(button, project);
+            ProjectController.projectsMap.put(button, project);
 
             button.addActionListener(e -> openProject(project));
 
@@ -145,25 +143,25 @@ public class ProjectController {
         }
     }
 
-    private void openProject(Project projectSelected) {
+    private void openProject(Project selectedProject) {
         projectView.getMain().setVisible(false);
 
         projectView.add(yearView, BorderLayout.WEST);
         projectView.add(monthView, BorderLayout.CENTER);
         projectView.add(expenseView, BorderLayout.EAST);
 
-        openYear(projectSelected);
+        openYear(selectedProject);
     }
 
-    public void openYear(Project projectSelected) {
-        new YearController(this, yearView, projectSelected);
+    public void openYear(Project selectedProject) {
+        new YearController(this, yearView, selectedProject);
     }
 
     protected void openMonth(Month selectedMonth) {
         new MonthController(this, monthView, selectedMonth);
     }
 
-    public void openExpense(Expense expense) {
-        new ExpenseController(this, expenseView, expense);
+    public void openExpense(Expense selectedExpense) {
+        new ExpenseController(this, expenseView, selectedExpense);
     }
 }

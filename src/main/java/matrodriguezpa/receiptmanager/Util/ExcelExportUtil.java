@@ -1,5 +1,5 @@
 
-package matrodriguezpa.receiptmanager.Util;
+package matrodriguezpa.receiptmanager.util;
 
 import org.apache.poi.xssf.*;
 

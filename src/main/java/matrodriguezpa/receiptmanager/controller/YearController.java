@@ -17,15 +17,14 @@ import matrodriguezpa.receiptmanager.view.YearView;
 public class YearController {
 
     private static ProjectController projectController;
-    private static Project project;
 
     private static YearView yearView;
-
-    private static DefaultTreeModel treeModel;
-    private static final Map<DefaultMutableTreeNode, Month> monthNodes = new HashMap<>();
+    private static DefaultTreeModel yearTreeModel;
+    private static final Map<DefaultMutableTreeNode, Month> yearMonthNodes = new HashMap<>();
 
     private static final YearDAO yearDao = new YearDAO();
     private static final MonthDAO monthDao = new MonthDAO();
+    private static Project project;
 
     public YearController(ProjectController projectController, YearView yearView, Project projectSelected) {
 
@@ -183,13 +182,13 @@ public class YearController {
     protected static void updateYearTree() {
         if (project == null) {
             DefaultMutableTreeNode emptyRoot = new DefaultMutableTreeNode("No Project Open");
-            treeModel = new DefaultTreeModel(emptyRoot);
-            yearView.getLeftNavigation().setModel(treeModel);
+            yearTreeModel = new DefaultTreeModel(emptyRoot);
+            yearView.getLeftNavigation().setModel(yearTreeModel);
             return;
         }
 
         // Limpiar el mapa antes de reconstruir
-        monthNodes.clear();
+        yearMonthNodes.clear();
 
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(project.getName());
 
@@ -210,19 +209,19 @@ public class YearController {
                 String monthName = String.valueOf(month.getMONTH());
                 DefaultMutableTreeNode monthNode = new DefaultMutableTreeNode(monthName);
                 // NO se guarda el objeto Month en el userObject, solo en el mapa
-                monthNodes.put(monthNode, month);
+                yearMonthNodes.put(monthNode, month);
                 yearNode.add(monthNode);
             }
             root.add(yearNode);
         }
 
-        treeModel = new DefaultTreeModel(root);
-        yearView.getLeftNavigation().setModel(treeModel);
+        yearTreeModel = new DefaultTreeModel(root);
+        yearView.getLeftNavigation().setModel(yearTreeModel);
     }
 
     private void openMonth(DefaultMutableTreeNode selectedNode) {
         if (selectedNode != null && selectedNode.isLeaf()) {
-            Month selectedMonth = monthNodes.get(selectedNode);
+            Month selectedMonth = yearMonthNodes.get(selectedNode);
             if (selectedMonth != null) {
                 projectController.openMonth(selectedMonth);
             }

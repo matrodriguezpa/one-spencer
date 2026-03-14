@@ -1,6 +1,6 @@
 package matrodriguezpa.receiptmanager.dao;
 
-import matrodriguezpa.receiptmanager.Util.DBConectionUtil;
+import matrodriguezpa.receiptmanager.util.DBConectionUtil;
 import java.util.List;
 import java.util.ArrayList;
 import java.sql.PreparedStatement;

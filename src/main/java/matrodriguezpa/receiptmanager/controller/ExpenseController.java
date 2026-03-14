@@ -2,20 +2,20 @@ package matrodriguezpa.receiptmanager.controller;
 
 import javax.swing.JOptionPane;
 import matrodriguezpa.receiptmanager.dao.ExpenseDAO;
-import matrodriguezpa.receiptmanager.dao.MonthDAO;
 import matrodriguezpa.receiptmanager.model.Expense;
 import matrodriguezpa.receiptmanager.view.ExpenseView;
 
 public class ExpenseController {
 
-    private static Expense expense;
+    private static ProjectController projectController;
 
     private static ExpenseView expenseView;
 
-    private final MonthDAO monthDao = new MonthDAO();
     private static ExpenseDAO expenseDao = new ExpenseDAO();
+    private static Expense expense;
 
-    public ExpenseController(ProjectController aThis, ExpenseView expenseview, Expense selectedExpense) {
+    public ExpenseController(ProjectController projectController, ExpenseView expenseview, Expense selectedExpense) {
+        ExpenseController.projectController = projectController;
         ExpenseController.expenseView = expenseview;
         ExpenseController.expense = selectedExpense;
         expenseDao.createTable();

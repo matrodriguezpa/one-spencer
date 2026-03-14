@@ -1,6 +1,6 @@
 package matrodriguezpa.receiptmanager.dao;
 
-import matrodriguezpa.receiptmanager.Util.DBConectionUtil;
+import matrodriguezpa.receiptmanager.util.DBConectionUtil;
 import matrodriguezpa.receiptmanager.model.Month;
 import matrodriguezpa.receiptmanager.model.Year;
 

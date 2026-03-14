@@ -12,16 +12,15 @@ import matrodriguezpa.receiptmanager.view.MonthView;
 
 public class MonthController {
 
-    private static Month month;
     private static ProjectController projectController;
-
+    
     private static MonthView monthView;
-
-    private static DefaultTableModel tableModel;
-    private static List<Expense> expenses = new ArrayList<>();
+    private static DefaultTableModel monthTableModel;
+    private static List<Expense> monthExpenses = new ArrayList<>();
 
     private final MonthDAO monthDao = new MonthDAO();
     private static final ExpenseDAO expenseDao = new ExpenseDAO();
+    private static Month month;
 
     public MonthController(ProjectController projectController, MonthView monthView, Month selectedMonth) {
         MonthController.projectController = projectController;
@@ -48,12 +47,12 @@ public class MonthController {
             return;
         }
 
-        tableModel = (DefaultTableModel) monthView.getMainTable().getModel();
-        tableModel.setRowCount(0);
-        MonthController.expenses = expenseDao.findByMonthId(month.getId());
-        System.out.println(expenses);
-        for (Expense expense : expenses) {
-            tableModel.addRow(new Object[]{
+        monthTableModel = (DefaultTableModel) monthView.getMainTable().getModel();
+        monthTableModel.setRowCount(0);
+        MonthController.monthExpenses = expenseDao.findByMonthId(month.getId());
+        System.out.println(monthExpenses);
+        for (Expense expense : monthExpenses) {
+            monthTableModel.addRow(new Object[]{
                 expense.getDAY(), // Día
                 expense.getCompany(), // Compañía
                 expense.getAmount(), // Importe formateado
@@ -67,8 +66,8 @@ public class MonthController {
 
     private void openExpense() { // Evita eventos intermedios
         int selectedRow = monthView.getMainTable().getSelectedRow();
-        if (selectedRow != -1 && selectedRow < expenses.size()) {
-            Expense expense = expenses.get(selectedRow);
+        if (selectedRow != -1 && selectedRow < monthExpenses.size()) {
+            Expense expense = monthExpenses.get(selectedRow);
             projectController.openExpense(expense);
         }
     }
