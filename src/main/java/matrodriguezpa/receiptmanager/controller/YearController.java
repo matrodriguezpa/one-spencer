@@ -36,7 +36,7 @@ public class YearController {
         monthDao.createTable();
         updateYearTree();
 
-        yearView.getNewMonthButton().addActionListener(e -> createYear());
+        yearView.getNewYearButton().addActionListener(e -> createYear());
         yearView.getLeftNavigation().addTreeSelectionListener(e -> {
             DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) yearView
                     .getLeftNavigation()
