@@ -28,6 +28,10 @@ public class ProjectController {
 
     private static final ProjectDAO projectDao = new ProjectDAO();
 
+    private ExpenseController expenseController;
+    private MonthController monthController;
+    private YearController yearController;
+
     public ProjectController(ProjectView projectView) {
 
         ProjectController.projectView = projectView;
@@ -41,7 +45,6 @@ public class ProjectController {
         projectView.getCreateNewUser().addActionListener(e -> createProject());
         projectView.getOpenUserProjects1().addActionListener(e -> editProject());
         projectView.getOpenUserProjects2().addActionListener(e -> deleteProject());
-
     }
 
     public void start() {
@@ -154,14 +157,26 @@ public class ProjectController {
     }
 
     public void openYear(Project selectedProject) {
-        new YearController(this, yearView, selectedProject);
+        yearController = new YearController(this, yearView, selectedProject);
     }
 
     protected void openMonth(Month selectedMonth) {
-        new MonthController(this, monthView, selectedMonth);
+        monthController = new MonthController(this, monthView, selectedMonth);
     }
 
     public void openExpense(Expense selectedExpense) {
-        new ExpenseController(this, expenseView, selectedExpense);
+        expenseController = new ExpenseController(this, expenseView, selectedExpense);
+    }
+
+    void updateYearView() {
+        yearController.updateYearTree();
+    }
+
+    void updateMonthView() {
+        monthController.updateMainTable();
+    }
+
+    void updateExpenseView() {
+        expenseController.updateEditor();
     }
 }
