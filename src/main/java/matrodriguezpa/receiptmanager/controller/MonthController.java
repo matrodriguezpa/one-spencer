@@ -13,7 +13,7 @@ import matrodriguezpa.receiptmanager.view.MonthView;
 public class MonthController {
 
     private static ProjectController projectController;
-    
+
     private static MonthView monthView;
     private static DefaultTableModel monthTableModel;
     private static List<Expense> monthExpenses = new ArrayList<>();
@@ -26,34 +26,38 @@ public class MonthController {
         MonthController.projectController = projectController;
         MonthController.monthView = monthView;
         MonthController.month = selectedMonth;
+        MonthController.monthTableModel = (DefaultTableModel) monthView.getMainTable().getModel();
 
         monthDao.createTable();
         updateMainTable();
 
-        monthView.getMainTable().getSelectionModel().addListSelectionListener(e -> openExpense());
+        monthView.getMainTable().getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {  // SelectionListener se ejecuta cuando se da click y se suelta, esto hace que solo sea una vez xd
+                openExpense();
+            }
+        });
     }
 
-    public void createMonth() {
+    private void createMonth() {
     }
 
-    public void updateMonth() {
+    private void updateMonth() {
     }
 
-    public void deleteMonth() {
+    private void deleteMonth() {
     }
 
-    private static void updateMainTable() {
+    protected static void updateMainTable() {
         if (month == null || month.getId() == null) {
             return;
         }
 
-        monthTableModel = (DefaultTableModel) monthView.getMainTable().getModel();
-        monthTableModel.setRowCount(0);
+        MonthController.monthTableModel.setRowCount(0);
         MonthController.monthExpenses = expenseDao.findByMonthId(month.getId());
-        System.out.println(monthExpenses);
+
         for (Expense expense : monthExpenses) {
             monthTableModel.addRow(new Object[]{
-                expense.getDAY(), // Día
+                expense.getYEAR() + "-" + expense.getMONTH() + "-" + expense.getDAY(), // Fecha
                 expense.getCompany(), // Compañía
                 expense.getAmount(), // Importe formateado
                 expense.getType(), // Tipo de gasto
@@ -64,7 +68,7 @@ public class MonthController {
         monthView.getMainTable().repaint();
     }
 
-    private void openExpense() { // Evita eventos intermedios
+    private void openExpense() {
         int selectedRow = monthView.getMainTable().getSelectedRow();
         if (selectedRow != -1 && selectedRow < monthExpenses.size()) {
             Expense expense = monthExpenses.get(selectedRow);
