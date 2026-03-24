@@ -32,11 +32,38 @@ public class MonthView extends javax.swing.JPanel {
         mainTableScroll = new javax.swing.JScrollPane();
         mainTable = new javax.swing.JTable();
         mainTableHeader = new javax.swing.JToolBar();
+        addMonth2 = new javax.swing.JButton();
+        addMonth1 = new javax.swing.JButton();
         addMonth = new javax.swing.JButton();
-        EditExpense = new javax.swing.JButton();
 
+        setMaximumSize(new java.awt.Dimension(430, 430));
+        setMinimumSize(new java.awt.Dimension(430, 430));
+        setPreferredSize(new java.awt.Dimension(430, 430));
         setLayout(new java.awt.BorderLayout());
 
+        mainTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Date", "Company", "Amount", "Type", "Matrix", "Payment"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         mainTableScroll.setViewportView(mainTable);
 
         add(mainTableScroll, java.awt.BorderLayout.CENTER);
@@ -47,9 +74,35 @@ public class MonthView extends javax.swing.JPanel {
         mainTableHeader.setPreferredSize(new java.awt.Dimension(150, 30));
         mainTableHeader.setRequestFocusEnabled(false);
 
+        addMonth2.setBackground(new java.awt.Color(51, 102, 255));
+        addMonth2.setForeground(new java.awt.Color(255, 255, 255));
+        addMonth2.setText("Delete");
+        addMonth2.setFocusable(false);
+        addMonth2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        addMonth2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        addMonth2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addMonth2ActionPerformed(evt);
+            }
+        });
+        mainTableHeader.add(addMonth2);
+
+        addMonth1.setBackground(new java.awt.Color(51, 102, 255));
+        addMonth1.setForeground(new java.awt.Color(255, 255, 255));
+        addMonth1.setText("Edit");
+        addMonth1.setFocusable(false);
+        addMonth1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        addMonth1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        addMonth1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addMonth1ActionPerformed(evt);
+            }
+        });
+        mainTableHeader.add(addMonth1);
+
         addMonth.setBackground(new java.awt.Color(51, 102, 255));
         addMonth.setForeground(new java.awt.Color(255, 255, 255));
-        addMonth.setText("AddMonth");
+        addMonth.setText("new");
         addMonth.setFocusable(false);
         addMonth.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         addMonth.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -60,19 +113,6 @@ public class MonthView extends javax.swing.JPanel {
         });
         mainTableHeader.add(addMonth);
 
-        EditExpense.setBackground(new java.awt.Color(51, 102, 255));
-        EditExpense.setForeground(new java.awt.Color(255, 255, 255));
-        EditExpense.setText("Edit Expense");
-        EditExpense.setFocusable(false);
-        EditExpense.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        EditExpense.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        EditExpense.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EditExpenseActionPerformed(evt);
-            }
-        });
-        mainTableHeader.add(EditExpense);
-
         add(mainTableHeader, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -80,14 +120,19 @@ public class MonthView extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_addMonthActionPerformed
 
-    private void EditExpenseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditExpenseActionPerformed
+    private void addMonth1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMonth1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_EditExpenseActionPerformed
+    }//GEN-LAST:event_addMonth1ActionPerformed
+
+    private void addMonth2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMonth2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addMonth2ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton EditExpense;
     private javax.swing.JButton addMonth;
+    private javax.swing.JButton addMonth1;
+    private javax.swing.JButton addMonth2;
     private javax.swing.JTable mainTable;
     private javax.swing.JToolBar mainTableHeader;
     private javax.swing.JScrollPane mainTableScroll;

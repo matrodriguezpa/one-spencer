@@ -20,8 +20,7 @@ public class YearView extends javax.swing.JPanel {
         TagTextField = new javax.swing.JTextField();
         leftSibeBar = new javax.swing.JToolBar();
         jToolBar1 = new javax.swing.JToolBar();
-        newMonthButton = new javax.swing.JButton();
-        openMonthButton = new javax.swing.JButton();
+        newYearButton = new javax.swing.JButton();
         leftScroll = new javax.swing.JScrollPane();
         leftNavigation = new javax.swing.JTree();
 
@@ -49,24 +48,17 @@ public class YearView extends javax.swing.JPanel {
 
         jToolBar1.setRollover(true);
 
-        newMonthButton.setBackground(new java.awt.Color(255, 102, 102));
-        newMonthButton.setText("New");
-        newMonthButton.setFocusable(false);
-        newMonthButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        newMonthButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        newMonthButton.addActionListener(new java.awt.event.ActionListener() {
+        newYearButton.setBackground(new java.awt.Color(255, 102, 102));
+        newYearButton.setText("New");
+        newYearButton.setFocusable(false);
+        newYearButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        newYearButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        newYearButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newMonthButtonActionPerformed(evt);
+                newYearButtonActionPerformed(evt);
             }
         });
-        jToolBar1.add(newMonthButton);
-
-        openMonthButton.setBackground(new java.awt.Color(0, 102, 255));
-        openMonthButton.setText("Open");
-        openMonthButton.setFocusable(false);
-        openMonthButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        openMonthButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(openMonthButton);
+        jToolBar1.add(newYearButton);
 
         leftSibeBar.add(jToolBar1);
 
@@ -79,9 +71,9 @@ public class YearView extends javax.swing.JPanel {
         add(leftSibeBar, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void newMonthButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMonthButtonActionPerformed
+    private void newYearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newYearButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_newMonthButtonActionPerformed
+    }//GEN-LAST:event_newYearButtonActionPerformed
 
     private void TagTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TagTextFieldActionPerformed
         // TODO add your handling code here:
@@ -97,7 +89,6 @@ public class YearView extends javax.swing.JPanel {
     private javax.swing.JTree leftNavigation;
     private javax.swing.JScrollPane leftScroll;
     private javax.swing.JToolBar leftSibeBar;
-    private javax.swing.JButton newMonthButton;
-    private javax.swing.JButton openMonthButton;
+    private javax.swing.JButton newYearButton;
     // End of variables declaration//GEN-END:variables
 }

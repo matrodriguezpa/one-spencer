@@ -15,20 +15,24 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import matrodriguezpa.receiptmanager.controller.ProjectController;
+import matrodriguezpa.receiptmanager.util.ExcelExportUtil;
 import matrodriguezpa.receiptmanager.view.ProjectView;
 
 public class ReceiptManager extends javax.swing.JFrame {
 
-    ImageIcon icon = new ImageIcon("src\\main\\resources\\Images\\Logo.png"); //App Icon
+    ExcelExportUtil exportExcelUtil = new ExcelExportUtil();
 
     public ReceiptManager() {
-        initComponents(); 
+        initComponents();
+        this.setExtendedState(MAXIMIZED_BOTH);
+
+        exportExcel.addActionListener(e -> exportExcel());
         aboutItem.addActionListener(e -> openAboutWindow());
         javadocItem.addActionListener(e -> openJavaDoc());
         userDocItem.addActionListener(e -> openDocumentation());
         exitProgramItem.addActionListener(e -> closeProgram());
     }
-    
+
     public static void main(String[] args) {
         ReceiptManager receiptManager = new ReceiptManager();
         receiptManager.showTitleScreen();
@@ -40,9 +44,8 @@ public class ReceiptManager extends javax.swing.JFrame {
     public void start(ReceiptManager view) {
         ProjectView projectView = new ProjectView();
         view.add(projectView);
-        new ProjectController(projectView).start();   
+        new ProjectController(projectView).start();
     }
-
 
     public void showTitleScreen() {
         JFrame loadingFrame = new JFrame();
@@ -78,6 +81,10 @@ public class ReceiptManager extends javax.swing.JFrame {
         dialog.setModal(true);
         dialog.setResizable(false);
         dialog.setVisible(true);
+    }
+
+    private void exportExcel() {
+        
     }
 
     private void openJavaDoc() {
@@ -123,6 +130,8 @@ public class ReceiptManager extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         openProjectItem = new javax.swing.JMenuItem();
         closeProjectItem = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
+        exportExcel = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         exitProgramItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
@@ -181,8 +190,10 @@ public class ReceiptManager extends javax.swing.JFrame {
         loadingPanel.add(loadingFooter, java.awt.BorderLayout.SOUTH);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("One spencer");
-        setIconImage(icon.getImage());
+        setTitle("Receipt Manager");
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setIconImage(getIconImage());
+        setIconImages(getIconImages());
         setMinimumSize(new java.awt.Dimension(960, 540));
 
         fileMenu.setBackground(new java.awt.Color(51, 102, 255));
@@ -198,6 +209,10 @@ public class ReceiptManager extends javax.swing.JFrame {
 
         closeProjectItem.setText("Close project");
         fileMenu.add(closeProjectItem);
+        fileMenu.add(jSeparator3);
+
+        exportExcel.setText("Exit program");
+        fileMenu.add(exportExcel);
         fileMenu.add(jSeparator2);
 
         exitProgramItem.setText("Exit program");
@@ -233,10 +248,12 @@ public class ReceiptManager extends javax.swing.JFrame {
     private javax.swing.JLabel author;
     private javax.swing.JMenuItem closeProjectItem;
     private javax.swing.JMenuItem exitProgramItem;
+    private javax.swing.JMenuItem exportExcel;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JMenuItem javadocItem;
     private javax.swing.JSplitPane loadingFooter;
     private javax.swing.JLabel loadingImage;

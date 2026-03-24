@@ -23,12 +23,12 @@ public class ExpenseView extends javax.swing.JPanel {
         company = new javax.swing.JComboBox<>();
         addCompanyButton = new javax.swing.JButton();
         newExpenseAddAmount = new javax.swing.JPanel();
-        Amount = new javax.swing.JLabel();
+        AmountText = new javax.swing.JLabel();
         amount = new javax.swing.JTextField();
-        newExpenseAddExpense = new javax.swing.JPanel();
+        newExpenseAddType = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         expense = new javax.swing.JComboBox<>();
-        addExpenseButton = new javax.swing.JButton();
+        addTypeButton = new javax.swing.JButton();
         newExpenseAddMatrix = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         matrix = new javax.swing.JComboBox<>();
@@ -37,11 +37,20 @@ public class ExpenseView extends javax.swing.JPanel {
         jLabel8 = new javax.swing.JLabel();
         payment = new javax.swing.JComboBox<>();
         addPaymentButton = new javax.swing.JButton();
-        addExpense = new javax.swing.JButton();
+        newExpenseAddPayment1 = new javax.swing.JPanel();
+        deleteExpenseButton = new javax.swing.JButton();
+        editExpenseButton = new javax.swing.JButton();
+        addExpenseButton = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20), javax.swing.BorderFactory.createTitledBorder("Expense")));
+        setMaximumSize(new java.awt.Dimension(450, 300));
+        setMinimumSize(new java.awt.Dimension(450, 300));
+        setPreferredSize(new java.awt.Dimension(450, 300));
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.PAGE_AXIS));
 
+        newExpenseAddDate.setMaximumSize(new java.awt.Dimension(250, 30));
+        newExpenseAddDate.setMinimumSize(new java.awt.Dimension(250, 30));
+        newExpenseAddDate.setPreferredSize(new java.awt.Dimension(250, 30));
         newExpenseAddDate.setLayout(new javax.swing.BoxLayout(newExpenseAddDate, javax.swing.BoxLayout.LINE_AXIS));
 
         Date.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -74,9 +83,9 @@ public class ExpenseView extends javax.swing.JPanel {
 
         add(newExpenseAddDate);
 
-        newExpenseAddCompany.setMaximumSize(new java.awt.Dimension(200, 30));
-        newExpenseAddCompany.setMinimumSize(new java.awt.Dimension(200, 30));
-        newExpenseAddCompany.setPreferredSize(new java.awt.Dimension(200, 30));
+        newExpenseAddCompany.setMaximumSize(new java.awt.Dimension(250, 30));
+        newExpenseAddCompany.setMinimumSize(new java.awt.Dimension(250, 30));
+        newExpenseAddCompany.setPreferredSize(new java.awt.Dimension(250, 30));
         newExpenseAddCompany.setLayout(new javax.swing.BoxLayout(newExpenseAddCompany, javax.swing.BoxLayout.LINE_AXIS));
 
         companyLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -90,7 +99,7 @@ public class ExpenseView extends javax.swing.JPanel {
         company.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "opcion1", "opcion2" }));
         company.setMaximumSize(new java.awt.Dimension(120, 30));
         company.setMinimumSize(new java.awt.Dimension(20, 20));
-        company.setPreferredSize(new java.awt.Dimension(80, 20));
+        company.setPreferredSize(new java.awt.Dimension(130, 20));
         newExpenseAddCompany.add(company);
 
         addCompanyButton.setBackground(new java.awt.Color(102, 102, 255));
@@ -105,14 +114,17 @@ public class ExpenseView extends javax.swing.JPanel {
 
         add(newExpenseAddCompany);
 
+        newExpenseAddAmount.setMaximumSize(new java.awt.Dimension(250, 30));
+        newExpenseAddAmount.setMinimumSize(new java.awt.Dimension(250, 30));
+        newExpenseAddAmount.setPreferredSize(new java.awt.Dimension(250, 30));
         newExpenseAddAmount.setLayout(new javax.swing.BoxLayout(newExpenseAddAmount, javax.swing.BoxLayout.LINE_AXIS));
 
-        Amount.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        Amount.setText("Amount");
-        Amount.setMaximumSize(new java.awt.Dimension(80, 30));
-        Amount.setMinimumSize(new java.awt.Dimension(80, 30));
-        Amount.setPreferredSize(new java.awt.Dimension(80, 30));
-        newExpenseAddAmount.add(Amount);
+        AmountText.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        AmountText.setText("Amount");
+        AmountText.setMaximumSize(new java.awt.Dimension(80, 30));
+        AmountText.setMinimumSize(new java.awt.Dimension(80, 30));
+        AmountText.setPreferredSize(new java.awt.Dimension(80, 30));
+        newExpenseAddAmount.add(AmountText);
 
         amount.setText("1000");
         amount.setMaximumSize(new java.awt.Dimension(120, 30));
@@ -122,40 +134,40 @@ public class ExpenseView extends javax.swing.JPanel {
 
         add(newExpenseAddAmount);
 
-        newExpenseAddExpense.setMaximumSize(new java.awt.Dimension(200, 30));
-        newExpenseAddExpense.setMinimumSize(new java.awt.Dimension(200, 30));
-        newExpenseAddExpense.setPreferredSize(new java.awt.Dimension(200, 30));
-        newExpenseAddExpense.setLayout(new javax.swing.BoxLayout(newExpenseAddExpense, javax.swing.BoxLayout.LINE_AXIS));
+        newExpenseAddType.setMaximumSize(new java.awt.Dimension(250, 30));
+        newExpenseAddType.setMinimumSize(new java.awt.Dimension(250, 30));
+        newExpenseAddType.setPreferredSize(new java.awt.Dimension(250, 30));
+        newExpenseAddType.setLayout(new javax.swing.BoxLayout(newExpenseAddType, javax.swing.BoxLayout.LINE_AXIS));
 
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel6.setText("Expense");
+        jLabel6.setText("Type");
         jLabel6.setMaximumSize(new java.awt.Dimension(80, 30));
         jLabel6.setMinimumSize(new java.awt.Dimension(80, 30));
         jLabel6.setPreferredSize(new java.awt.Dimension(80, 30));
-        newExpenseAddExpense.add(jLabel6);
+        newExpenseAddType.add(jLabel6);
 
         expense.setEditable(true);
         expense.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Personal", "Trabajo" }));
         expense.setMaximumSize(new java.awt.Dimension(120, 30));
         expense.setMinimumSize(new java.awt.Dimension(20, 20));
         expense.setPreferredSize(new java.awt.Dimension(80, 20));
-        newExpenseAddExpense.add(expense);
+        newExpenseAddType.add(expense);
 
-        addExpenseButton.setBackground(new java.awt.Color(102, 102, 255));
-        addExpenseButton.setForeground(new java.awt.Color(255, 255, 255));
-        addExpenseButton.setText("+");
-        addExpenseButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        addExpenseButton.setMaximumSize(new java.awt.Dimension(30, 30));
-        addExpenseButton.setMinimumSize(new java.awt.Dimension(30, 30));
-        addExpenseButton.setPreferredSize(new java.awt.Dimension(30, 30));
-        addExpenseButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        newExpenseAddExpense.add(addExpenseButton);
+        addTypeButton.setBackground(new java.awt.Color(102, 102, 255));
+        addTypeButton.setForeground(new java.awt.Color(255, 255, 255));
+        addTypeButton.setText("+");
+        addTypeButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        addTypeButton.setMaximumSize(new java.awt.Dimension(30, 30));
+        addTypeButton.setMinimumSize(new java.awt.Dimension(30, 30));
+        addTypeButton.setPreferredSize(new java.awt.Dimension(30, 30));
+        addTypeButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        newExpenseAddType.add(addTypeButton);
 
-        add(newExpenseAddExpense);
+        add(newExpenseAddType);
 
-        newExpenseAddMatrix.setMaximumSize(new java.awt.Dimension(200, 30));
-        newExpenseAddMatrix.setMinimumSize(new java.awt.Dimension(200, 30));
-        newExpenseAddMatrix.setPreferredSize(new java.awt.Dimension(200, 30));
+        newExpenseAddMatrix.setMaximumSize(new java.awt.Dimension(250, 30));
+        newExpenseAddMatrix.setMinimumSize(new java.awt.Dimension(250, 30));
+        newExpenseAddMatrix.setPreferredSize(new java.awt.Dimension(250, 30));
         newExpenseAddMatrix.setLayout(new javax.swing.BoxLayout(newExpenseAddMatrix, javax.swing.BoxLayout.LINE_AXIS));
 
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -184,9 +196,9 @@ public class ExpenseView extends javax.swing.JPanel {
 
         add(newExpenseAddMatrix);
 
-        newExpenseAddPayment.setMaximumSize(new java.awt.Dimension(200, 30));
-        newExpenseAddPayment.setMinimumSize(new java.awt.Dimension(200, 30));
-        newExpenseAddPayment.setPreferredSize(new java.awt.Dimension(200, 30));
+        newExpenseAddPayment.setMaximumSize(new java.awt.Dimension(250, 30));
+        newExpenseAddPayment.setMinimumSize(new java.awt.Dimension(250, 30));
+        newExpenseAddPayment.setPreferredSize(new java.awt.Dimension(250, 30));
         newExpenseAddPayment.setLayout(new javax.swing.BoxLayout(newExpenseAddPayment, javax.swing.BoxLayout.LINE_AXIS));
 
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -215,32 +227,65 @@ public class ExpenseView extends javax.swing.JPanel {
 
         add(newExpenseAddPayment);
 
-        addExpense.setBackground(new java.awt.Color(51, 102, 255));
-        addExpense.setForeground(new java.awt.Color(255, 255, 255));
-        addExpense.setText("Add");
-        addExpense.setAlignmentX(0.5F);
-        addExpense.setAlignmentY(1.0F);
-        addExpense.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        addExpense.setMargin(new java.awt.Insets(1, 1, 1, 1));
-        addExpense.setMaximumSize(new java.awt.Dimension(50, 30));
-        addExpense.setMinimumSize(new java.awt.Dimension(50, 30));
-        addExpense.setPreferredSize(new java.awt.Dimension(50, 30));
-        addExpense.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        add(addExpense);
+        newExpenseAddPayment1.setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        newExpenseAddPayment1.setMaximumSize(new java.awt.Dimension(250, 80));
+        newExpenseAddPayment1.setMinimumSize(new java.awt.Dimension(250, 80));
+        newExpenseAddPayment1.setPreferredSize(new java.awt.Dimension(250, 80));
+
+        deleteExpenseButton.setBackground(java.awt.Color.red);
+        deleteExpenseButton.setForeground(java.awt.Color.white);
+        deleteExpenseButton.setText("Eliminar");
+        deleteExpenseButton.setAlignmentX(0.5F);
+        deleteExpenseButton.setAlignmentY(1.0F);
+        deleteExpenseButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        deleteExpenseButton.setMargin(new java.awt.Insets(1, 1, 1, 1));
+        deleteExpenseButton.setMaximumSize(new java.awt.Dimension(50, 30));
+        deleteExpenseButton.setMinimumSize(new java.awt.Dimension(50, 30));
+        deleteExpenseButton.setPreferredSize(new java.awt.Dimension(50, 30));
+        deleteExpenseButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        newExpenseAddPayment1.add(deleteExpenseButton);
+
+        editExpenseButton.setText("Editar");
+        editExpenseButton.setAlignmentX(0.5F);
+        editExpenseButton.setAlignmentY(1.0F);
+        editExpenseButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        editExpenseButton.setMargin(new java.awt.Insets(1, 1, 1, 1));
+        editExpenseButton.setMaximumSize(new java.awt.Dimension(50, 30));
+        editExpenseButton.setMinimumSize(new java.awt.Dimension(50, 30));
+        editExpenseButton.setPreferredSize(new java.awt.Dimension(50, 30));
+        editExpenseButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        newExpenseAddPayment1.add(editExpenseButton);
+
+        addExpenseButton.setBackground(new java.awt.Color(51, 102, 255));
+        addExpenseButton.setForeground(new java.awt.Color(255, 255, 255));
+        addExpenseButton.setText("Add");
+        addExpenseButton.setAlignmentX(0.5F);
+        addExpenseButton.setAlignmentY(1.0F);
+        addExpenseButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        addExpenseButton.setMargin(new java.awt.Insets(1, 1, 1, 1));
+        addExpenseButton.setMaximumSize(new java.awt.Dimension(50, 30));
+        addExpenseButton.setMinimumSize(new java.awt.Dimension(50, 30));
+        addExpenseButton.setPreferredSize(new java.awt.Dimension(50, 30));
+        addExpenseButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        newExpenseAddPayment1.add(addExpenseButton);
+
+        add(newExpenseAddPayment1);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel Amount;
+    private javax.swing.JLabel AmountText;
     private javax.swing.JLabel Date;
     private javax.swing.JButton addCompanyButton;
-    private javax.swing.JButton addExpense;
     private javax.swing.JButton addExpenseButton;
     private javax.swing.JButton addMatrixButton;
     private javax.swing.JButton addPaymentButton;
+    private javax.swing.JButton addTypeButton;
     private javax.swing.JTextField amount;
     private javax.swing.JComboBox<String> company;
     private javax.swing.JLabel companyLabel;
+    private javax.swing.JButton deleteExpenseButton;
+    private javax.swing.JButton editExpenseButton;
     private javax.swing.JComboBox<String> expense;
     private javax.swing.JSpinner expenseDateDay;
     private javax.swing.JSpinner expenseDateMonth;
@@ -252,9 +297,10 @@ public class ExpenseView extends javax.swing.JPanel {
     private javax.swing.JPanel newExpenseAddAmount;
     private javax.swing.JPanel newExpenseAddCompany;
     private javax.swing.JPanel newExpenseAddDate;
-    private javax.swing.JPanel newExpenseAddExpense;
     private javax.swing.JPanel newExpenseAddMatrix;
     private javax.swing.JPanel newExpenseAddPayment;
+    private javax.swing.JPanel newExpenseAddPayment1;
+    private javax.swing.JPanel newExpenseAddType;
     private javax.swing.JComboBox<String> payment;
     // End of variables declaration//GEN-END:variables
 }
