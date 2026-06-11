@@ -317,7 +317,95 @@ public class ProjectController {
         expenseController.updateEditor();
     }
 
-    public void openYear(Project selectedProject) {
+    /*MENUBAR METHODS*/
+    // Abre un JDialog flotante con el panel de selección de proyectos
+    private void openProject() {
+        updateProjectList();
+
+        JOptionPane optionPane = new JOptionPane(
+                projectView.getUserSelectionScrollPanel(),
+                JOptionPane.PLAIN_MESSAGE,
+                JOptionPane.DEFAULT_OPTION,
+                null,
+                new Object[]{} // sin botones de JOptionPane; los botones ya están en el panel
+        );
+
+        JDialog dialog = optionPane.createDialog(projectView, "Select a Project");
+        dialog.setModal(true);
+        dialog.setResizable(true);
+        dialog.setSize(350, 400);
+        dialog.setLocationRelativeTo(projectView);
+        dialog.setVisible(true);
+    }
+
+    private void closeProject() {
+        projectView.remove(yearView);
+        projectView.remove(monthView);
+        projectView.remove(expenseView);
+
+        projectView.getMain().setVisible(true);
+        projectView.getCloseProjectItem().setEnabled(false);
+        projectView.getExportExcelItem().setEnabled(false);
+
+        projectView.revalidate();
+        projectView.repaint();
+    }
+
+    //Help
+    private void openJavaDoc() {
+        try {
+            Desktop.getDesktop().browse(new URI("https://example.com"));
+        } catch (IOException | URISyntaxException ex) {
+            System.out.println("Error opening link: " + ex);
+        }
+    }
+
+    private void openDocumentation() {
+        try {
+            Desktop.getDesktop().browse(new URI("https://example.com"));
+        } catch (IOException | URISyntaxException ex) {
+            System.out.println("Error opening link: " + ex);
+        }
+    }
+
+    private void openAboutWindow() {
+        JOptionPane optionPane = new JOptionPane(
+                projectView.getAboutPanel(),
+                JOptionPane.PLAIN_MESSAGE,
+                JOptionPane.DEFAULT_OPTION
+        );
+        JDialog dialog = optionPane.createDialog("About");
+        dialog.setModal(true);
+        dialog.setResizable(false);
+        dialog.setVisible(true);
+    }
+
+    //Export
+    private void exportExcel() {
+        // Aquí va tu lógica de exportación.
+        // exportExcelUtil.export(...);
+        //tomar el projecto seleccionado
+        //
+    }
+
+    //Close
+    private void closeProgram() {
+        int confirm = JOptionPane.showConfirmDialog(
+                null,
+                "Are you sure you want to exit?",
+                "Exit Confirmation",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
+    }
+
+    /*OPEN CONTROLLERS*/
+    //TODO: Si estos metodos son utilizados solo en sus respectivos controladores,es mejor moverlos a ellos.
+    protected void openYear(Project selectedProject) {
         yearController = new YearController(this, yearView, selectedProject);
     }
 
@@ -329,15 +417,40 @@ public class ProjectController {
         expenseController = new ExpenseController(this, expenseView, selectedExpense);
     }
 
-    void updateYearView() {
-        yearController.updateYearTree();
+    /*APPLICATION START*/
+    public void startApplication() {
+        showTitleScreen();
+        applyFlatLaf();
+        projectView.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        projectView.setVisible(true);
+        projectView.repaint();
     }
 
-    void updateMonthView() {
-        monthController.updateMainTable();
+    public void showTitleScreen() {
+        JFrame loadingFrame = new JFrame();
+        loadingFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        loadingFrame.setUndecorated(true);
+
+        loadingFrame.getContentPane().add(projectView.getLoadingPanel());
+        loadingFrame.pack();
+        loadingFrame.setLocationRelativeTo(null);
+        loadingFrame.setVisible(true);
+
+        try {
+            Thread.sleep(2500);
+            loadingFrame.dispose();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ProjectController.class.getName()).log(Level.SEVERE, null, ex);
+            Thread.currentThread().interrupt();
+        }
     }
 
-    void updateExpenseView() {
-        expenseController.updateEditor();
+    public void applyFlatLaf() {
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (UnsupportedLookAndFeelException e) {
+            System.out.println("Error applying window styles: " + e);
+        }
+        SwingUtilities.updateComponentTreeUI(projectView);
     }
 }
