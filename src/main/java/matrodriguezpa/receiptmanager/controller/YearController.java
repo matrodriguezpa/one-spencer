@@ -24,13 +24,13 @@ public class YearController {
 
     private static final YearDAO yearDao = new YearDAO();
     private static final MonthDAO monthDao = new MonthDAO();
-    private static Project project;
+    private static Project selectedProject;
 
     public YearController(ProjectController projectController, YearView yearView, Project projectSelected) {
 
         YearController.projectController = projectController;
         YearController.yearView = yearView;
-        YearController.project = projectSelected;
+        YearController.selectedProject = projectSelected;
 
         yearDao.createTable();
         monthDao.createTable();
@@ -45,6 +45,7 @@ public class YearController {
         });
     }
 
+    //CRUD OPERATIONS
     private void createYear() {
         // Mostrar diálogo para ingresar año y tag, asociado al proyecto actual
         int result = JOptionPane.showConfirmDialog(yearView,
@@ -60,7 +61,7 @@ public class YearController {
             // Proyecto actual
 
             // Validaciones
-            if (this.project == null) {
+            if (this.selectedProject == null) {
                 JOptionPane.showMessageDialog(yearView, "No project selected!");
                 return;
             }
@@ -78,14 +79,14 @@ public class YearController {
             }
 
             // Verificar si ya existe un año con ese valor para el mismo proyecto
-            if (yearDao.existsByProjectAndYear(this.project.getId(), yearValue)) {
+            if (yearDao.existsByProjectAndYear(this.selectedProject.getId(), yearValue)) {
                 JOptionPane.showMessageDialog(yearView, "Year already exists for this project!");
                 return;
             }
 
             // Construir objeto Year
             Year newYear = Year.builder()
-                    .projectId(this.project.getId())
+                    .projectId(this.selectedProject.getId())
                     .YEAR(yearValue)
                     .tag(tag)
                     .build();
@@ -179,8 +180,9 @@ public class YearController {
         }
     }
 
+    //VIEW UPDATE
     protected static void updateYearTree() {
-        if (project == null) {
+        if (selectedProject == null) {
             DefaultMutableTreeNode emptyRoot = new DefaultMutableTreeNode("No Project Open");
             yearTreeModel = new DefaultTreeModel(emptyRoot);
             yearView.getLeftNavigation().setModel(yearTreeModel);
@@ -190,9 +192,9 @@ public class YearController {
         // Limpiar el mapa antes de reconstruir
         yearMonthNodes.clear();
 
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode(project.getName());
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(selectedProject.getName());
 
-        for (Year projectYear : yearDao.findByProjectId(project.getId())) {
+        for (Year projectYear : yearDao.findByProjectId(selectedProject.getId())) {
             String yearText = String.valueOf(projectYear.getYEAR());
             String tag = projectYear.getTag();
             if (tag != null && !tag.trim().isEmpty()) {
