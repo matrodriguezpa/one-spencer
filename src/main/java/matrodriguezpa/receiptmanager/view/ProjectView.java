@@ -1,162 +1,386 @@
-
 package matrodriguezpa.receiptmanager.view;
 
-import lombok.Getter;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
-@Getter
-public class ProjectView extends javax.swing.JPanel {
+public class ProjectView extends javax.swing.JFrame {
 
     public ProjectView() {
         initComponents();
     }
-    
+
+    public JMenuBar getMainMenuBar() {
+        return menuBar;
+    }
+
+    public JMenuItem getExportExcel() {
+        return exportExcelItem;
+    }
+
+    public JMenuItem getAboutItem() {
+        return aboutItem;
+    }
+
+    public JMenuItem getJavadocItem() {
+        return javadocItem;
+    }
+
+    public JMenuItem getUserDocItem() {
+        return userDocItem;
+    }
+
+    public JMenuItem getExitProgramItem() {
+        return exitProgramItem;
+    }
+
+    public JPanel getLoadingPanel() {
+        return loadingPanel;
+    }
+
+    public JPanel getAboutPanel() {
+        return aboutPanel;
+    }
+
+    public JPanel getMain() {
+        return projectPanel;
+    }
+
+    public JPanel getProjectSelectionPanel() {
+        return projectSelectionPanel;
+    }
+
+    public ButtonGroup getProjectButtonGroup() {
+        return projectButtonGroup;
+    }
+
+    public JMenuItem getCloseProjectItem() {
+        return closeProjectItem;
+    }
+
+    public JMenuItem getExportExcelItem() {
+        return exportExcelItem;
+    }
+
+    public JMenuItem getCreateProjectItem() {
+        return newProjectItem;
+    }
+
+    public JMenuItem getOpenProjectItem() {
+        return openProjectItem;
+    }
+
+    public JButton getCreateProjectButton() {
+        return createProjectButton;
+    }
+
+    public JButton getDeleteProjectButton() {
+        return deleteProjectButton;
+    }
+
+    public JButton getEditProjectButton() {
+        return editProjectButton;
+    }
+
+    public JButton getOpenProjectButton() {
+        return openProjectButton;
+    }
+
+    public JScrollPane getUserSelectionScrollPanel() {
+        return userSelectionScrollPanel;
+    }
+
+    public JPanel getProjectFormPanel() {
+        return projectFormPanel;
+    }
+
+    public JTextField getNewProjectTextField() {
+        return newProjectTextField;
+    }
+        
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        userButtonGroup = new javax.swing.ButtonGroup();
-        userFormPanel = new javax.swing.JPanel();
+        projectButtonGroup = new javax.swing.ButtonGroup();
+        projectFormPanel = new javax.swing.JPanel();
         insertName = new javax.swing.JLabel();
-        newUserTextField = new javax.swing.JTextField();
-        main = new javax.swing.JPanel();
+        newProjectTextField = new javax.swing.JTextField();
+        aboutPanel = new javax.swing.JPanel();
+        GitHub = new javax.swing.JLabel();
+        Copyrigth = new javax.swing.JLabel();
+        loadingPanel = new javax.swing.JPanel();
+        loadingImage = new javax.swing.JLabel();
+        loadingFooter = new javax.swing.JSplitPane();
+        author = new javax.swing.JLabel();
+        version = new javax.swing.JLabel();
+        projectPanel = new javax.swing.JPanel();
         welcomeImage = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        userSelectionPanel = new javax.swing.JPanel();
+        userSelectionScrollPanel = new javax.swing.JScrollPane();
+        projectSelectionPanel = new javax.swing.JPanel();
         userSelectionText = new javax.swing.JLabel();
-        jSplitPane1 = new javax.swing.JSplitPane();
-        jPanel1 = new javax.swing.JPanel();
-        openUserProjects = new javax.swing.JButton();
-        userListOptions = new javax.swing.JToolBar();
-        createNewUser = new javax.swing.JButton();
-        openUserProjects1 = new javax.swing.JButton();
-        openUserProjects2 = new javax.swing.JButton();
+        projectButtonsSplitPanel = new javax.swing.JSplitPane();
+        openProjectPanel = new javax.swing.JPanel();
+        openProjectButton = new javax.swing.JButton();
+        projectOptionsToolBar = new javax.swing.JToolBar();
+        createProjectButton = new javax.swing.JButton();
+        editProjectButton = new javax.swing.JButton();
+        deleteProjectButton = new javax.swing.JButton();
+        menuBar = new javax.swing.JMenuBar();
+        fileMenu = new javax.swing.JMenu();
+        newProjectItem = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        openProjectItem = new javax.swing.JMenuItem();
+        closeProjectItem = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        exportExcelItem = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
+        exitProgramItem = new javax.swing.JMenuItem();
+        helpMenu = new javax.swing.JMenu();
+        userDocItem = new javax.swing.JMenuItem();
+        javadocItem = new javax.swing.JMenuItem();
+        aboutItem = new javax.swing.JMenuItem();
 
-        userFormPanel.setLayout(new javax.swing.BoxLayout(userFormPanel, javax.swing.BoxLayout.Y_AXIS));
+        projectFormPanel.setLayout(new javax.swing.BoxLayout(projectFormPanel, javax.swing.BoxLayout.Y_AXIS));
 
         insertName.setText("Insert Name");
-        userFormPanel.add(insertName);
+        projectFormPanel.add(insertName);
 
-        newUserTextField.setText("Nuevo usuario");
-        userFormPanel.add(newUserTextField);
+        newProjectTextField.setText("Nuevo usuario");
+        projectFormPanel.add(newProjectTextField);
 
-        setLayout(new java.awt.BorderLayout());
+        GitHub.setText("matrodriguezpa on Github");
 
-        main.setLayout(new java.awt.BorderLayout());
+        Copyrigth.setText("All expencer copygith");
+
+        javax.swing.GroupLayout aboutPanelLayout = new javax.swing.GroupLayout(aboutPanel);
+        aboutPanel.setLayout(aboutPanelLayout);
+        aboutPanelLayout.setHorizontalGroup(
+            aboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, aboutPanelLayout.createSequentialGroup()
+                .addContainerGap(59, Short.MAX_VALUE)
+                .addComponent(GitHub)
+                .addGap(56, 56, 56))
+            .addGroup(aboutPanelLayout.createSequentialGroup()
+                .addGap(67, 67, 67)
+                .addComponent(Copyrigth)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        aboutPanelLayout.setVerticalGroup(
+            aboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(aboutPanelLayout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(GitHub)
+                .addGap(44, 44, 44)
+                .addComponent(Copyrigth)
+                .addContainerGap(85, Short.MAX_VALUE))
+        );
+
+        loadingPanel.setBackground(new java.awt.Color(255, 102, 153));
+        loadingPanel.setLayout(new java.awt.BorderLayout());
+
+        loadingImage.setBackground(new java.awt.Color(255, 51, 153));
+        loadingImage.setForeground(new java.awt.Color(255, 51, 102));
+        loadingImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Tittle.png"))); // NOI18N
+        loadingPanel.add(loadingImage, java.awt.BorderLayout.CENTER);
+
+        loadingFooter.setBackground(new java.awt.Color(255, 51, 102));
+        loadingFooter.setDividerLocation(150);
+        loadingFooter.setDividerSize(0);
+
+        author.setForeground(new java.awt.Color(255, 255, 255));
+        author.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        author.setText("By matrodriguezpa");
+        loadingFooter.setRightComponent(author);
+
+        version.setForeground(new java.awt.Color(255, 255, 255));
+        version.setText("v0.1 beta");
+        loadingFooter.setLeftComponent(version);
+
+        loadingPanel.add(loadingFooter, java.awt.BorderLayout.SOUTH);
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        projectPanel.setLayout(new java.awt.BorderLayout());
 
         welcomeImage.setBackground(new java.awt.Color(255, 204, 204));
         welcomeImage.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
         welcomeImage.setForeground(new java.awt.Color(255, 51, 102));
         welcomeImage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        welcomeImage.setText("ONE EXPENSE");
+        welcomeImage.setText("RECEIPT MANAGER");
         welcomeImage.setMaximumSize(new java.awt.Dimension(70, 70));
         welcomeImage.setMinimumSize(new java.awt.Dimension(70, 70));
         welcomeImage.setPreferredSize(new java.awt.Dimension(70, 70));
-        main.add(welcomeImage, java.awt.BorderLayout.PAGE_START);
+        projectPanel.add(welcomeImage, java.awt.BorderLayout.PAGE_START);
 
-        userSelectionPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        userSelectionPanel.setAlignmentX(0.0F);
-        userSelectionPanel.setAlignmentY(0.0F);
-        userSelectionPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        userSelectionPanel.setMaximumSize(new java.awt.Dimension(300, 300));
-        userSelectionPanel.setMinimumSize(new java.awt.Dimension(300, 300));
-        userSelectionPanel.setPreferredSize(new java.awt.Dimension(300, 300));
-        userSelectionPanel.setLayout(new javax.swing.BoxLayout(userSelectionPanel, javax.swing.BoxLayout.Y_AXIS));
+        projectSelectionPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        projectSelectionPanel.setAlignmentY(0.0F);
+        projectSelectionPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        projectSelectionPanel.setMaximumSize(new java.awt.Dimension(300, 300));
+        projectSelectionPanel.setMinimumSize(new java.awt.Dimension(300, 300));
+        projectSelectionPanel.setPreferredSize(new java.awt.Dimension(300, 300));
+        projectSelectionPanel.setLayout(new javax.swing.BoxLayout(projectSelectionPanel, javax.swing.BoxLayout.Y_AXIS));
 
         userSelectionText.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         userSelectionText.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        userSelectionText.setText("User Selection:");
+        userSelectionText.setText("Project Selection:");
         userSelectionText.setToolTipText("");
         userSelectionText.setAlignmentY(-1.0F);
         userSelectionText.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         userSelectionText.setMaximumSize(new java.awt.Dimension(500, 16));
-        userSelectionPanel.add(userSelectionText);
+        projectSelectionPanel.add(userSelectionText);
 
-        jScrollPane1.setViewportView(userSelectionPanel);
+        userSelectionScrollPanel.setViewportView(projectSelectionPanel);
 
-        main.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        projectPanel.add(userSelectionScrollPanel, java.awt.BorderLayout.CENTER);
 
-        jPanel1.setMaximumSize(new java.awt.Dimension(70, 40));
-        jPanel1.setMinimumSize(new java.awt.Dimension(70, 40));
-        jPanel1.setName(""); // NOI18N
-        jPanel1.setPreferredSize(new java.awt.Dimension(70, 40));
+        openProjectPanel.setMaximumSize(new java.awt.Dimension(70, 40));
+        openProjectPanel.setMinimumSize(new java.awt.Dimension(70, 40));
+        openProjectPanel.setName(""); // NOI18N
+        openProjectPanel.setPreferredSize(new java.awt.Dimension(70, 40));
 
-        openUserProjects.setBackground(new java.awt.Color(153, 153, 153));
-        openUserProjects.setForeground(new java.awt.Color(255, 255, 255));
-        openUserProjects.setText("Open");
-        openUserProjects.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        openUserProjects.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        openUserProjects.setMaximumSize(new java.awt.Dimension(70, 30));
-        openUserProjects.setMinimumSize(new java.awt.Dimension(70, 30));
-        openUserProjects.setPreferredSize(new java.awt.Dimension(70, 30));
-        openUserProjects.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jPanel1.add(openUserProjects);
+        openProjectButton.setBackground(new java.awt.Color(153, 153, 153));
+        openProjectButton.setForeground(new java.awt.Color(255, 255, 255));
+        openProjectButton.setText("Open");
+        openProjectButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        openProjectButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        openProjectButton.setMaximumSize(new java.awt.Dimension(70, 30));
+        openProjectButton.setMinimumSize(new java.awt.Dimension(70, 30));
+        openProjectButton.setPreferredSize(new java.awt.Dimension(70, 30));
+        openProjectButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        openProjectPanel.add(openProjectButton);
 
-        jSplitPane1.setRightComponent(jPanel1);
+        projectButtonsSplitPanel.setRightComponent(openProjectPanel);
 
-        userListOptions.setRollover(true);
-        userListOptions.setMaximumSize(new java.awt.Dimension(700, 50));
-        userListOptions.setMinimumSize(new java.awt.Dimension(700, 50));
-        userListOptions.setPreferredSize(new java.awt.Dimension(700, 50));
+        projectOptionsToolBar.setRollover(true);
+        projectOptionsToolBar.setMaximumSize(new java.awt.Dimension(700, 50));
+        projectOptionsToolBar.setMinimumSize(new java.awt.Dimension(700, 50));
+        projectOptionsToolBar.setPreferredSize(new java.awt.Dimension(700, 50));
 
-        createNewUser.setBackground(new java.awt.Color(0, 102, 255));
-        createNewUser.setForeground(new java.awt.Color(255, 255, 255));
-        createNewUser.setText("New");
-        createNewUser.setFocusable(false);
-        createNewUser.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        createNewUser.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        createNewUser.setMaximumSize(new java.awt.Dimension(50, 25));
-        createNewUser.setMinimumSize(new java.awt.Dimension(50, 25));
-        createNewUser.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        userListOptions.add(createNewUser);
+        createProjectButton.setBackground(new java.awt.Color(0, 102, 255));
+        createProjectButton.setForeground(new java.awt.Color(255, 255, 255));
+        createProjectButton.setText("Create");
+        createProjectButton.setFocusable(false);
+        createProjectButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        createProjectButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        createProjectButton.setMaximumSize(new java.awt.Dimension(50, 25));
+        createProjectButton.setMinimumSize(new java.awt.Dimension(50, 25));
+        createProjectButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        projectOptionsToolBar.add(createProjectButton);
 
-        openUserProjects1.setBackground(new java.awt.Color(153, 153, 153));
-        openUserProjects1.setForeground(new java.awt.Color(255, 255, 255));
-        openUserProjects1.setText("Edit");
-        openUserProjects1.setEnabled(false);
-        openUserProjects1.setFocusable(false);
-        openUserProjects1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        openUserProjects1.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        openUserProjects1.setMaximumSize(new java.awt.Dimension(50, 25));
-        openUserProjects1.setMinimumSize(new java.awt.Dimension(50, 25));
-        openUserProjects1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        userListOptions.add(openUserProjects1);
+        editProjectButton.setBackground(new java.awt.Color(153, 153, 153));
+        editProjectButton.setForeground(new java.awt.Color(255, 255, 255));
+        editProjectButton.setText("Edit");
+        editProjectButton.setFocusable(false);
+        editProjectButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        editProjectButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        editProjectButton.setMaximumSize(new java.awt.Dimension(50, 25));
+        editProjectButton.setMinimumSize(new java.awt.Dimension(50, 25));
+        editProjectButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        projectOptionsToolBar.add(editProjectButton);
 
-        openUserProjects2.setBackground(new java.awt.Color(255, 0, 51));
-        openUserProjects2.setForeground(new java.awt.Color(255, 255, 255));
-        openUserProjects2.setText("Delete");
-        openUserProjects2.setEnabled(false);
-        openUserProjects2.setFocusable(false);
-        openUserProjects2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        openUserProjects2.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        openUserProjects2.setMaximumSize(new java.awt.Dimension(50, 25));
-        openUserProjects2.setMinimumSize(new java.awt.Dimension(50, 25));
-        openUserProjects2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        userListOptions.add(openUserProjects2);
+        deleteProjectButton.setBackground(new java.awt.Color(255, 0, 51));
+        deleteProjectButton.setForeground(new java.awt.Color(255, 255, 255));
+        deleteProjectButton.setText("Delete");
+        deleteProjectButton.setFocusable(false);
+        deleteProjectButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        deleteProjectButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        deleteProjectButton.setMaximumSize(new java.awt.Dimension(50, 25));
+        deleteProjectButton.setMinimumSize(new java.awt.Dimension(50, 25));
+        deleteProjectButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        projectOptionsToolBar.add(deleteProjectButton);
 
-        jSplitPane1.setLeftComponent(userListOptions);
+        projectButtonsSplitPanel.setLeftComponent(projectOptionsToolBar);
 
-        main.add(jSplitPane1, java.awt.BorderLayout.PAGE_END);
+        projectPanel.add(projectButtonsSplitPanel, java.awt.BorderLayout.PAGE_END);
 
-        add(main, java.awt.BorderLayout.CENTER);
+        getContentPane().add(projectPanel, java.awt.BorderLayout.CENTER);
+
+        fileMenu.setBackground(new java.awt.Color(51, 102, 255));
+        fileMenu.setText("File");
+
+        newProjectItem.setText("New project");
+        newProjectItem.setFocusable(true);
+        fileMenu.add(newProjectItem);
+        fileMenu.add(jSeparator1);
+
+        openProjectItem.setText("Open project");
+        fileMenu.add(openProjectItem);
+
+        closeProjectItem.setText("Close project");
+        fileMenu.add(closeProjectItem);
+        fileMenu.add(jSeparator2);
+
+        exportExcelItem.setText("Export Excel");
+        fileMenu.add(exportExcelItem);
+        fileMenu.add(jSeparator3);
+
+        exitProgramItem.setText("Exit program");
+        fileMenu.add(exitProgramItem);
+
+        menuBar.add(fileMenu);
+
+        helpMenu.setBackground(new java.awt.Color(51, 102, 255));
+        helpMenu.setText("Help");
+
+        userDocItem.setText("Documentation");
+        helpMenu.add(userDocItem);
+
+        javadocItem.setText("Javadoc");
+        helpMenu.add(javadocItem);
+
+        aboutItem.setText("About");
+        helpMenu.add(aboutItem);
+
+        menuBar.add(helpMenu);
+
+        setJMenuBar(menuBar);
+
+        pack();
     }// </editor-fold>//GEN-END:initComponents
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    public javax.swing.JButton createNewUser;
+    private javax.swing.JLabel Copyrigth;
+    private javax.swing.JLabel GitHub;
+    private javax.swing.JMenuItem aboutItem;
+    private javax.swing.JPanel aboutPanel;
+    private javax.swing.JLabel author;
+    private javax.swing.JMenuItem closeProjectItem;
+    private javax.swing.JButton createProjectButton;
+    private javax.swing.JButton deleteProjectButton;
+    private javax.swing.JButton editProjectButton;
+    private javax.swing.JMenuItem exitProgramItem;
+    private javax.swing.JMenuItem exportExcelItem;
+    private javax.swing.JMenu fileMenu;
+    private javax.swing.JMenu helpMenu;
     private javax.swing.JLabel insertName;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JPanel main;
-    private javax.swing.JTextField newUserTextField;
-    public javax.swing.JButton openUserProjects;
-    public javax.swing.JButton openUserProjects1;
-    public javax.swing.JButton openUserProjects2;
-    public javax.swing.ButtonGroup userButtonGroup;
-    private javax.swing.JPanel userFormPanel;
-    private javax.swing.JToolBar userListOptions;
-    private javax.swing.JPanel userSelectionPanel;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
+    private javax.swing.JMenuItem javadocItem;
+    private javax.swing.JSplitPane loadingFooter;
+    private javax.swing.JLabel loadingImage;
+    private javax.swing.JPanel loadingPanel;
+    private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuItem newProjectItem;
+    private javax.swing.JTextField newProjectTextField;
+    private javax.swing.JButton openProjectButton;
+    private javax.swing.JMenuItem openProjectItem;
+    private javax.swing.JPanel openProjectPanel;
+    public javax.swing.ButtonGroup projectButtonGroup;
+    private javax.swing.JSplitPane projectButtonsSplitPanel;
+    private javax.swing.JPanel projectFormPanel;
+    private javax.swing.JToolBar projectOptionsToolBar;
+    private javax.swing.JPanel projectPanel;
+    private javax.swing.JPanel projectSelectionPanel;
+    private javax.swing.JMenuItem userDocItem;
+    private javax.swing.JScrollPane userSelectionScrollPanel;
     private javax.swing.JLabel userSelectionText;
+    private javax.swing.JLabel version;
     private javax.swing.JLabel welcomeImage;
     // End of variables declaration//GEN-END:variables
 }
